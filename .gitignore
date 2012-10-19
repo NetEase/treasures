@@ -1,7 +1,7 @@
 .project
 *.log
-*/node-log.log
-logs/*.log
+logs/*
+*/*.log
 !.gitignore
 node_modules/*
 */node_modules/*
