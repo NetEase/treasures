@@ -1,0 +1,21 @@
+﻿
+.g-doc{width:1000px;margin:0 auto;text-align:left;line-height:18px;font-size:12px;color:#555;font-family:arial;}
+
+
+.m-hdnav{position:relative;width:1000px;height:90px;margin:0 auto;border-bottom:1px solid #dedede;}
+.m-hdnav .logo{position:absolute;left:20px;top:13px;width:153px;height:60px;z-index:101;}
+.m-hdnav .logo .img{width:153px;height:60px;background:url(../image/logo.png) no-repeat 0 0;}
+
+a:link { color:#006699;text-decoration:none; }
+a:visited { color:#006699;text-decoration:none; }
+a:hover { color:#FF0000;text-decoration:underline; }
+a:active { color:#006699;text-decoration:underline; }
+
+
+
+
+
+
+
+
+
