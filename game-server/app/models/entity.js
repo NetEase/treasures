@@ -11,7 +11,7 @@ var id = 1;
  * @param {Object} opts
  * @api public
  */
-var Entity = function(opts) {
+function Entity(opts) {
 	EventEmitter.call(this);
 	this.entityId = id++;
 	this.kindId = opts.kindId;
@@ -21,8 +21,7 @@ var Entity = function(opts) {
 	this.y = opts.y;
 	
 	this.areaId = opts.areaId || 1;
-
-};
+}
 
 util.inherits(Entity, EventEmitter);
 
