@@ -1,21 +1,42 @@
-﻿
-.g-doc{width:1000px;margin:0 auto;text-align:left;line-height:18px;font-size:12px;color:#555;font-family:arial;}
+﻿body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td{margin:0;padding:0;}
+table{border-collapse:collapse;border-spacing:0;}
+caption,th{text-align:left;}
+fieldset,img,a img,iframe,html,body{border:0;}
+li{list-style:none;}
+address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+abbr,acronym{border:0;font-variant:normal;}
+sup{vertical-align:text-top;}
+sub{vertical-align:text-bottom;}
+del,ins{text-decoration:none;}
+[hidefocus]{outline:0;}
+textarea,input,button,select{font-size:inherit;line-height:inherit;color:inherit;font-family:inherit;}
+textarea{overflow:auto;resize:none;}
+body{word-wrap:break-word;font:12px/normal arial,simsun;color:#333;background:#fff;}
+h1,h2,h3,h4,h5,h6,em,strong,b{font-weight:bold;}
+a,button{cursor:pointer;}
+a,a:hover{text-decoration:none;color:#333;}
 
 
-.m-hdnav{position:relative;width:1000px;height:90px;margin:0 auto;border-bottom:1px solid #dedede;}
-.m-hdnav .logo{position:absolute;left:20px;top:13px;width:153px;height:60px;z-index:101;}
-.m-hdnav .logo .img{width:153px;height:60px;background:url(../image/logo.png) no-repeat 0 0;}
-
-a:link { color:#006699;text-decoration:none; }
-a:visited { color:#006699;text-decoration:none; }
-a:hover { color:#FF0000;text-decoration:underline; }
-a:active { color:#006699;text-decoration:underline; }
-
-
-
-
-
-
-
-
-
+body {
+  background: #333 scroll;
+  font-size: 13px;
+}
+.hide {
+  display: none;
+}
+#login > div {
+  padding: 10px;
+  width: 300px;
+  height: 100px;
+  margin: 200px auto;
+}
+#login .btn {
+  padding: 5px 10px;
+  font-weight: bold;
+}
+#login input{
+  height: 22px;
+  width: 170px;
+  font-size: 15px;
+}

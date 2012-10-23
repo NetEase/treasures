@@ -1,27 +1,73 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Pomelo</title>
-        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <meta http-equiv="content-style-type" content="text/css" />
-        <meta http-equiv="content-scripte-type" content="text/javascript" />
-        <meta name="author" content="netease" />
-        <meta name="version" content="1.0" />
-        <meta name="keywords" content="pomelo" />
-        <meta name="description" content="" />
-        <link type="text/css" rel="stylesheet" href="css/base.css" />
-    </head>
-    <body>
-      <div class="g-doc">
-            <div class="g-bd">
-		<div class="m-hdnav" style="border:none">
-                	<div class="logo"><a href="#"><div class="img"></div></a></div>
-            	</div>
-                <div style='height:350px;background:url(image/sp.png) no-repeat 326px 0;'><div style = 'padding:150px;width:800px;margin-left:50px;font-size:50pt;font-style:italic'>Welcome to Pomelo</div>
-</div>
-<div style = 'height:100px;margin-top:30px;margin-left:300px;font-size:15pt'>Home: <a href = "https://github.com/NetEase/pomelo">https://github.com/NetEase/pomelo</a><div>
-            </div>
-       </div> 
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Treasure -- a demo of Pomelo</title>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="author" content="netease" />
+    <meta name="version" content="1.0" />
+    <meta name="keywords" content="pomelo" />
+    <meta name="description" content="pomelo, pomelojs, game, demo" />
+    <link type="text/css" rel="stylesheet" href="/css/base.css" />
+
+    <script src='/js/lib/colorbox/colorbox_header.js'></script>
+    <script src='/js/lib/colorbox/Box2dWeb-2.1.a.3.js'></script>
+    <script src='/js/lib/colorbox/JXGUtil.js'></script>
+    <script src='/js/lib/colorbox/base.js'></script>
+    <script src='/js/lib/colorbox/base64.js'></script>
+    <script src='/js/lib/colorbox/clocker.js'></script>
+    <script src='/js/lib/colorbox/debug.js'></script>
+    <script src='/js/lib/colorbox/geometry.js'></script>
+    <script src='/js/lib/colorbox/gzip.js'></script>
+    <script src='/js/lib/colorbox/helper.js'></script>
+    <script src='/js/lib/colorbox/oo.js'></script>
+    <script src='/js/lib/colorbox/path.js'></script>
+    <script src='/js/lib/colorbox/pathfinding.js'></script>
+    <script src='/js/lib/colorbox/platform.js'></script>
+    <script src='/js/lib/colorbox/processing.js'></script>
+    <script src='/js/lib/colorbox/util.js'></script>
+    <script src='/js/lib/colorbox/xmlload.js'></script>
+    <script src='/js/lib/colorbox/resmgr.js'></script>
+    <script src='/js/lib/colorbox/canvaseventdecider.js'></script>
+    <script src='/js/lib/colorbox/component.js'></script>
+    <script src='/js/lib/colorbox/gui/button.js'></script>
+    <script src='/js/lib/colorbox/gui/slidebar.js'></script>
+    <script src='/js/lib/colorbox/logic.js'></script>
+    <script src='/js/lib/colorbox/matrix.js'></script>
+    <script src='/js/lib/colorbox/model.js'></script>
+    <script src='/js/lib/colorbox/node.js'></script>
+    <script src='/js/lib/colorbox/particle.js'></script>
+    <script src='/js/lib/colorbox/physicsnode.js'></script>
+    <script src='/js/lib/colorbox/pipe.js'></script>
+    <script src='/js/lib/colorbox/scene.js'></script>
+    <script src='/js/lib/colorbox/sound.js'></script>
+    <script src='/js/lib/colorbox/tiled_map.js'></script>
+    <script src='/js/lib/colorbox/frameanimation.js'></script>
+    <script src='/js/lib/colorbox/view/index.js'></script>
+    <script src='/js/lib/colorbox/view/honestview.js'></script>
+    <script src='/js/lib/colorbox/view/processingview.js'></script>
+    <script src='/js/lib/colorbox/animate.js'></script>
+    <script src='/js/lib/colorbox/director.js'></script>
+    <script src='/js/lib/colorbox/level.js'></script>
+    <script src='/js/lib/colorbox/leveltransition.js'></script>
+    <script src='/js/lib/colorbox/colorbox_module.js'></script>
+    <script src="/js/lib/events.js" type="text/javascript"></script>
+    <script src="/js/lib/pomeloclient.js" type="text/javascript"></script>
+    <script src="/js/lib/protocol.js" type="text/javascript"></script>
+    <!--<script src="/js/lib/jquery-1.8.0.min.js" type="text/javascript"></script>-->
+    <script src="/js/lib/socket.io.js" type="text/javascript"></script>
+
+    <script src="/js/main.js" type="text/javascript"></script>
+  </head>
+  <body>
+  <div id="main">
+    <div id="login">
+      <div>
+        <input type="text" placeholder="type a name...">
+        <button class="btn">Start Game</button>
+      </div>
+    </div>
+    <div id="game" class="hide"></div>
+  </div>
+  </body>
 </html>
