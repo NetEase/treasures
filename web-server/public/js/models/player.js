@@ -13,11 +13,11 @@ __resources__["player.js"] = {
      * @api public
      */
     function Player(opts) {
-
       this.walkSpeed = opts.walkSpeed;
       this.id = opts.id;
       this.type = 'player';
       this.name = opts.name;
+      this.treasureCount = opts.treasureCount || 0;
       this.target = null;
 
       //status

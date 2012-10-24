@@ -4,7 +4,6 @@ __resources__["entity.js"] = {
   data: function(exports, require, module, __filename, __dirname) {
 
     var Sprite = require('sprite');
-    var EntityType = require('consts').EntityType;
     var EventEmitter = window.EventEmitter;
 
     /**
@@ -19,7 +18,6 @@ __resources__["entity.js"] = {
       this.entityId = opts.entityId;
       this.kindId = opts.kindId;
       this.kindName = opts.kindName;
-      this.type = opts.type;
 
       //position
       this.x = opts.x;
@@ -36,16 +34,15 @@ __resources__["entity.js"] = {
     module.exports = Entity;
 
     //Set position
-    Entity.prototype.setPosition = function(x,y) {
+    Entity.prototype.setPosition = function(x, y) {
       this.x = x;
       this.y = y;
     };
 
     //Get position
     Entity.prototype.getPosition = function() {
-      return {x : this.x , y : this.y};
+      return {x: this.x, y: this.y};
     };
-
 
     /**
      * Destory entity. when the entity is killed or removed, it is invoke. 
