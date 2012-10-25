@@ -1,9 +1,10 @@
 {
-    "name":"treasures",
-    "version":"0.0.1",
-    "private":false,
-    "dependencies":{
-        "pomelo":"0.1.80"
-    }
+  "name": "treasures",
+  "version": "0.0.1",
+  "private": false,
+  "dependencies": {
+    "pomelo":"0.1.85"
+    , "pomelo-logger": "0.0.2" 
+  }
 }
 

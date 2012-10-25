@@ -1,10 +1,9 @@
 // Module dependencies
-var area = require('../../../domain/area/area');
-var messageService = require('../../../domain/messageService');
-var timer = require('../../../domain/area/timer');
-var world = require('../../../domain/world');
-var Move = require('../../../domain/action/move');
-var actionManager = require('../../../domain/action/actionManager');
+var area = require('../../../models/area');
+//var messageService = require('../../../domain/messageService');
+//var world = require('../../../domain/world');
+//var Move = require('../../../domain/action/move');
+//var actionManager = require('../../../domain/action/actionManager');
 var channelService = require('pomelo').channelService;
 var logger = require('pomelo-logger').getLogger(__filename);
 var app = require('pomelo').app;
