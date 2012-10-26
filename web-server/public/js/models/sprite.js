@@ -1,4 +1,4 @@
-__resources__["sprite.js"] = {
+__resources__["/sprite.js"] = {
   meta: {mimetype: "application/javascript"},
   
   data: function(exports, require, module, __filename, __dirname) {
@@ -18,10 +18,9 @@ __resources__["sprite.js"] = {
     var consts = require('consts');
     var utils = require('utils');
     var dataApi = require('dataApi');
-    var noEntityNode = require('noEntityNode');
-    var mainPanel = require('mainPanelView');
+    //var noEntityNode = require('noEntityNode');
+    //var mainPanel = require('mainPanelView');
     var animation = require('animation');
-    var objectPoolFactory = require('objectPoolFactory');
 
     var app = require('app');
 

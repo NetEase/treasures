@@ -2,13 +2,8 @@ __resources__["/area.js"] = {
   meta: {mimetype: "application/javascript"}, 
   data: function(exports, require, module, __filename, __dirname) {
     var Player = require('player');
-    var CurPlayer = require('curPlayer');
-    var NPC = require('npc');
-    var Map = require('map');
-    var Mob = require('mob');
-    var Item = require('item');
-    var Equipment = require('equipment');
-    var timeSync = require('timeSync');
+    //var CurPlayer = require('curPlayer');
+    //var Map = require('map');
     var ComponentAdder = require('componentAdder');
 
     var logic = require("logic");
@@ -56,7 +51,7 @@ __resources__["/area.js"] = {
       this.initColorBox();
 
       // width , height should be invoked by map data
-      this.map = new Map({mapData: this.mapData, scene: this.scene, name: opts.map.name, pos: {x: 0, y: 0}, width: opts.map.width, height: opts.map.height});
+      this.map = new Map({scene: this.scene, name: opts.map.name, pos: {x: 0, y: 0}, width: opts.map.width, height: opts.map.height});
       for (var key in opts.entities) {
         this.addEntity(opts.entities[key]);
       }

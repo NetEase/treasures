@@ -10,8 +10,8 @@ __resources__["/map.js"] = {
     var utils = require('utils');
     var app = require('app');
     var url = require('config').IMAGE_URL;
-    var xmlload = require('xmlload');
-    var buildFinder = require('pathfinding').buildFinder;
+    //var xmlload = require('xmlload');
+    //var buildFinder = require('pathfinding').buildFinder;
 
     var Map = function(opts){
       this.data = null;
@@ -22,8 +22,8 @@ __resources__["/map.js"] = {
       this.width = opts.width;
       this.height = opts.height;
       this.moveAnimation = null;
-      this.weightMap = opts.mapData.weightMap;
-      this.initMapData(opts);
+      //this.weightMap = opts.mapData.weightMap;
+      //this.initMapData(opts);
       this.loadMap();
 
       this.cache = {};

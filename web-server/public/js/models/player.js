@@ -1,4 +1,4 @@
-__resources__["player.js"] = {
+__resources__["/player.js"] = {
   meta: {mimetype: "application/javascript"},
   data: function(exports, require, module, __filename, __dirname) {
 

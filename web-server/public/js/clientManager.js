@@ -150,7 +150,6 @@ __resources__["/clientManager.js"] = {
 
     //暴露的接口和对象
     exports.init = init;
-    exports.entry = entry;
     //exports.register = register;
     exports.enterScene = enterScene;
     exports.move = move;

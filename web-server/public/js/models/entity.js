@@ -1,4 +1,4 @@
-__resources__["entity.js"] = {
+__resources__["/entity.js"] = {
   meta: {mimetype: "application/javascript"},
   
   data: function(exports, require, module, __filename, __dirname) {

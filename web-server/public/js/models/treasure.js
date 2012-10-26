@@ -1,4 +1,4 @@
-__resources__["treasure.js"] = {
+__resources__["/treasure.js"] = {
   meta: {mimetype: "application/javascript"},
   data: function(exports, require, module, __filename, __dirname) {
     // Module dependencies 

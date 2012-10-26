@@ -1,4 +1,4 @@
-__resources__["consts.js"] = {
+__resources__["/consts.js"] = {
   meta: {mimetype: "application/javascript"},
   data: function(exports, require, module, __filename, __dirname) {
 

@@ -1,12 +1,12 @@
-__resources__["msgHandler.js"] = {
+__resources__["/msgHandler.js"] = {
   meta: {mimetype: "application/javascript"},
   data: function(exports, require, module, __filename, __dirname) {
 
     var pomelo = window.pomelo;
     var app = require('app');
-    var dataApi = require('dataApi');
+    //var dataApi = require('dataApi');
     var Border = require('consts').Border;
-    var noEntityNode = require('noEntityNode');
+    //var noEntityNode = require('noEntityNode');
     var EntityType = require('consts').EntityType;
     var NodeCoordinate = require('consts').NodeCoordinate;
     var utils = require('utils');

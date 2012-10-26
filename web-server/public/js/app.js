@@ -2,11 +2,11 @@ __resources__["/app.js"] = {
   meta: {mimetype: "application/javascript"},
   
   data: function(exports, require, module, __filename, __dirname) {
-    var gameMsgHandler = require('gameMsgHandler'); // server message handler
+    var gameMsgHandler = require('msgHandler'); // server message handler
     var Area = require('area');
     var ComponentAdder = require('componentAdder');
     var ResMgr = require('resmgr').ResMgr;
-    var ObjectPoolManager = require('objectPoolManager');
+    //var ObjectPoolManager = require('objectPoolManager');
     var view = require("view");
     var director = require('director');
     var helper = require("helper");
@@ -22,7 +22,7 @@ __resources__["/app.js"] = {
     var delayTime = null;
 
     /**
-     * Init client ara
+     * Init client area
      * @param data {Object} The data for init area
      */
     function init(data) {
@@ -58,9 +58,9 @@ __resources__["/app.js"] = {
      */
     function initColorBox() {
       if (!skch) {
-        var main = document.getElementById("main");
-        var width = parseInt(getComputedStyle(main).width);
-        var height = parseInt(getComputedStyle(main).height);
+        var main = document.getElementById("game");
+        var width = parseInt(getComputedStyle(main).width, 10);
+        var height = parseInt(getComputedStyle(main).height, 10);
         skch = helper.createSketchpad(width, height, document.getElementById("game"));
         skch.cmpSprites = cmpSprites;
       }
@@ -118,9 +118,6 @@ __resources__["/app.js"] = {
 
     exports.init = init;
     exports.getResMgr = getResMgr;
-    exports.getObjectPoolManager = getObjectPoolManager;
-    exports.setDelayTime = setDelayTime;
-    exports.getDelayTime = getDelayTime;
     exports.getCurArea = getArea;
     exports.getCurPlayer = getCurPlayer;
   }
