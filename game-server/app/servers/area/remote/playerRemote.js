@@ -31,3 +31,6 @@ exp.playerLeave = function(args, cb) {
 	utils.invokeCallback(cb);
 };
 
+exp.addPlayer = function(playerName, cb) {
+
+};

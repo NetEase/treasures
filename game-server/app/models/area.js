@@ -22,13 +22,13 @@ var players = {};
 
 var entities = {};
 
-var zones = {};
+// var zones = {};
 
 var items = {};
 
 var channel = null;
 
-var aoi = null;
+// var aoi = null;
 
 /**
  * Init areas
@@ -43,20 +43,20 @@ exp.init = function(opts){
 	opts.weightMap = true;
 	map = new Map(opts);
 	//Init AOI
-  aoi = aoiManager.getService(aoiConfig[id]);
-	aoiEventManager.addEvent(aoi.aoi);
+  //aoi = aoiManager.getService(aoiConfig[id]);
+	// aoiEventManager.addEvent(aoi.aoi);
 
 	//Init mob zones
-	initMobZones(map.getMobZones());
+	// initMobZones(map.getMobZones());
 
-	initNPCs(this);
+	// initNPCs(this);
 
 	//create local channel
 	channel = channelService.getLocalChannelSync({name:'area_' + id, create:true});
 
-	aiManager = ai.createManager();
+	// aiManager = ai.createManager();
 
-	patrolManager = patrol.createManager({area:this});
+	// patrolManager = patrol.createManager({area:this});
 
 	actionManager = new ActionManager();
 
@@ -66,40 +66,9 @@ exp.init = function(opts){
 /**
  * @api public
  */
-function run(){
-	aiManager.start();
+function run() {
+	// aiManager.start();
 	timer.run();
-}
-
-/**
- * Init npcs
- * @api private
- */
-function initNPCs(){
-	var npcs = map.getNPCs();
-
-	for(var i = 0; i < npcs.length; i++){
-		var data = npcs[i];
-
-		data.kindId = data.id;
-		var npcInfo = dataApi.npc.findById(data.kindId);
-		data.kindName = npcInfo.name;
-		data.kindType = npcInfo.type;
-		data.orientation = data.orientation;
-		data.areaId = id;
-		exp.addEntity(new NPC(data));
-	}
-}
-
-/**
- * Init all zones in area
- * @api private
- */
-function initMobZones(mobZones){
-	for(var i = 0; i < mobZones.length; i++){
-    var zone = new MobZone(mobZones[i]);
-    zones[zone.zoneId] = zone;
-  }
 }
 
 /**
@@ -118,7 +87,7 @@ exp.addEntity = function(e){
 		channel.add(e.userId, e.serverId);
 		aiManager.addCharacters([e]);
 		
-		aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
+		// aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
 		
 		if(!!players[e.id]){
 			logger.error('add player twice! player : %j', e);

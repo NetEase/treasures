@@ -24,6 +24,7 @@ var handler = module.exports;
 handler.enterScene = function(msg, session, next) {
   var playerId = session.playerId;
   var areaId = session.areaId;
+  var username = msg.name;
 
   userDao.getPlayerAllInfo(playerId, function(err, player) {
     if (err || !player) {

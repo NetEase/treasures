@@ -9,32 +9,35 @@ __resources__["/main.js"] = {
     var app = require('app');
 
     function main() {
+      uiInit();
+    }
+
+    function entry (name, callback) {
       pomelo.init({host: config.GATE_HOST, port: config.GATE_PORT, log: true}, function() {
-        pomelo.request({route: 'gate.gateHandler.queryEntry', uid: uid}, function(data) {
+        pomelo.request({route: 'gate.gateHandler.queryEntry', uid: name}, function(data) {
           pomelo.disconnect();
 
-          if(data.code === 2001) {
-            alert('目前无可用服务器，请稍后再登录.');
+          if (data.code === 2001) {
+            alert('server error!');
             return;
           }
           pomelo.init({host: data.host, port: data.port, log: true}, function() {
-            uiInit();
+            if (callback) {
+              callback();
+            };
           });
         });
       });
-
-
     }
 
     var uiInit = function() {
       var btn = document.querySelector('#login .btn');
       btn.onclick = function() {
         var name = document.querySelector('#login input').value;
-
-
-
-        pomelo.request({route: "area.playerHandler.enterScene", name: name}, function(data){
-          app.init(data.data);
+        entry(name, function() {
+          pomelo.request({route: "area.playerHandler.enterScene", name: name}, function(data){
+            app.init(data.data);
+          });
         });
       };
     }
