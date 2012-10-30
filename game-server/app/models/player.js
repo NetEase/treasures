@@ -3,7 +3,7 @@ var Entity = require('./entity');
 var dataApi = require('../../util/dataApi');
 var EntityType = require('../../consts/consts').EntityType;
 var logger = require('pomelo-logger').getLogger(__filename);
-var area = require('./../area/area');
+var area = require('./area');
 
 /**
  * Initialize a new 'Player' with the given 'opts'.
@@ -17,9 +17,10 @@ function Player(opts) {
 	this.id = opts.id;
 	this.type = EntityType.PLAYER;
 	this.name = opts.name;
+  this.walkSpeed = 240;
 
-	this.roleData = dataApi.role.findById(this.kindId);
-	this.range = opts.range || 2;
+	//this.roleData = dataApi.role.findById(this.kindId);
+	// this.range = opts.range || 2;
 
 }
 
@@ -68,58 +69,6 @@ Player.prototype.pickItem = function(entityId) {
 	return result;
 };
 
-
-
-//Convert player' state to json and return
-Player.prototype.strip = function() {
-	return {
-		id: this.id,
-		entityId: this.entityId,
-		name: this.name,
-		kindId: this.kindId,
-		kindName: this.kindName,
-		type: this.type,
-		x: this.x,
-		y: this.y,
-		hp: this.hp,
-		mp: this.mp,
-		maxHp: this.maxHp,
-		maxMp: this.maxMp,
-		//country: this.country,
-		//rank: this.rank,
-		level: this.level,
-		experience: this.experience,
-		attackValue: this.attackValue,
-		defenceValue: this.defenceValue,
-		walkSpeed: this.walkSpeed,
-		attackSpeed: this.attackSpeed,
-		areaId: this.areaId,
-		hitRate: this.hitRate,
-		dodgeRate: this.dodgeRate,
-		//gender: this.gender,
-		//career: this.career,
-		nextLevelExp: this.nextLevelExp,
-		skillPoint: this.skillPoint
-	};
-};
-
-/**
- * Get the whole information of player, contains tasks, bag, equipments information.
- * 
- *  @return {Object}
- *  @api public
- */
-Player.prototype.getInfo = function() {
-	var playerData = this.strip();
-	playerData.bag = this.bag;
-	playerData.equipments = this.equipments;
-	playerData.characterData = this.characterData;
-	playerData.fightSkills = this.fightSkills;
-	playerData.curTasks = this._getCurTasksInfo();
-	return playerData;
-};
-
-
 /**
  * Parse String to json.
  * It covers object' method
@@ -128,22 +77,14 @@ Player.prototype.getInfo = function() {
  * @return {Object}
  * @api public
  */
-
 Player.prototype.toJSON = function() {
   return {
     id: this.id,
     entityId: this.entityId,
     name: this.name,
     kindId: this.kindId,
-    kindName: this.kindName,
-    type: this.type,
     x: this.x,
     y: this.y,
-    hp: this.hp,
-    mp: this.mp,
-    maxHp: this.maxHp,
-    maxMp: this.maxMp,
-		level: this.level,
 		walkSpeed: this.walkSpeed,
 		areaId: this.areaId
   };

@@ -1,5 +1,6 @@
 var pomelo = require('pomelo');
 var area = require('./app/models/area');
+var dataApi = require('./app/util/dataApi');
 var routeUtil = require('./app/util/routeUtil');
 
 /**
@@ -7,7 +8,7 @@ var routeUtil = require('./app/util/routeUtil');
  */
 var app = pomelo.createApp();
 app.set('name', 'treasures');
-app.set('dirname', __dirname);
+// app.set('dirname', __dirname);
 app.defaultConfiguration();
 
 app.configure(function() {
@@ -19,11 +20,11 @@ app.configure(function() {
 });
 
 app.configure('production|development', 'area', function(){
-  var areaId = app.curserver.area;
+  var areaId = app.curserver.areaId;
   if(!areaId || areaId < 0) {
     throw new Error('load area config failed');
   }
-  world.init(dataApi.area.all());
+  // world.init(dataApi.area.all());
   area.init(dataApi.area.findById(areaId));
 });
 

@@ -21,51 +21,30 @@ var handler = module.exports;
  * @param {Function} next
  * @api public
  */
-handler.enterScene = function(msg, session, next) {
+ handler.enterScene = function(msg, session, next) {
   var playerId = session.playerId;
   var areaId = session.areaId;
-  var username = msg.name;
 
-  userDao.getPlayerAllInfo(playerId, function(err, player) {
-    if (err || !player) {
-      logger.error('Get user for userDao failed! ' + err.stack);
-      next(new Error('fail to get user from dao'), {
-        route: msg.route,
-        code: consts.MESSAGE.ERR
-      });
+  var player = new Player({id: session.playerId, name: session.playername, roleId: '1001'});
 
-      return;
+  player.serverId = session.frontendId;
+
+  if (!area.addEntity(player)) {
+    logger.error("Add player to area faild! areaId : " + player.areaId);
+    next(new Error('fail to add user into area'), {
+      route: msg.route,
+      code: consts.MESSAGE.ERR
+    });
+    return;
+  }
+  
+  var map = area.map();
+  next(null, {
+    code: consts.MESSAGE.RES,
+    data: {
+      area: area.getAreaInfo(), 
+      player: player
     }
-
-    player.serverId = session.frontendId;
-    if (!area.addEntity(player)) {
-      logger.error("Add player to area faild! areaId : " + player.areaId);
-      next(new Error('fail to add user into area'), {
-        route: msg.route,
-        code: consts.MESSAGE.ERR
-      });
-      return;
-    }
-    var opts = {
-      name: 'area_' + areaId,
-      create: true
-    };
-    app.rpc.chat.chatRemote.add(session, msg.uid, session.frontendId, player.name, opts, function(data){});
-		var map = area.map();
-		next(null, {
-			code: consts.MESSAGE.RES,
-			data: {
-				area: area.getAreaInfo({x: player.x, y: player.y}, player.range), 
-        curPlayer: player.getInfo(),
-				mapData: {
-					mapWeight: map.width,
-					mapHeight: map.height,
-					tileW : map.tileW,
-					tileH : map.tileH,
-					weightMap: map.weightMap
-				}
-			}
-		});
   });
 };
 

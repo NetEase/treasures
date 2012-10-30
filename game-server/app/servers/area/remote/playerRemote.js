@@ -5,7 +5,7 @@
 var utils = require('../../../util/utils');
 var area = require('../../../models/area');
 var consts = require('../../../consts/consts');
-var messageService = require('../../../models/messageService');
+// var messageService = require('../../../models/messageService');
 
 
 var exp = module.exports;
@@ -27,10 +27,7 @@ exp.playerLeave = function(args, cb) {
 		return;
 	}
 	area.removePlayer(playerId);
-	messageService.pushMessage({route: 'onUserLeave', code: consts.MESSAGE.RES, playerId: playerId});
+	area.channel().pushMessage({route: 'onUserLeave', code: consts.MESSAGE.RES, playerId: playerId});
 	utils.invokeCallback(cb);
 };
 
-exp.addPlayer = function(playerName, cb) {
-
-};

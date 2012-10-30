@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "private": false,
   "dependencies": {
-    "pomelo":"0.1.87"
+    "pomelo":"0.1.92"
     , "pomelo-monitor": ">=0.1.0"
     , "crc" : ">=0.0.1"
+    , "pomelo-collection": ">=0.1.0"
     , "pomelo-logger": "0.0.2" 
   }
 }

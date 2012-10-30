@@ -3,19 +3,22 @@ var dataApi = require('../util/dataApi');
 //var Map = require('./../map/map');
 var pomelo = require('pomelo');
 var channelService = pomelo.channelService;
+var ActionManager = require('./action/actionManager');
 //var Queue = require('pomelo-collection').queue;
 //var eventManager = require('./../event/eventManager');
+var timer = require('./timer');
 var EntityType = require('../consts/consts').EntityType;
 var logger = require('pomelo-logger').getLogger(__filename);
 
 var exp = module.exports;
 
 var id = 0;
-var level = 0;
-var map = null;
+var width = 0;
+var height = 0;
+
 var actionManager = null;
-var aiManager = null;
-var patrolManager = null;
+// var aiManager = null;
+// var patrolManager = null;
 
 //The map from player to entity
 var players = {};
@@ -38,10 +41,11 @@ var channel = null;
 exp.init = function(opts){
 	//Init Map
 	id = opts.id;
-	level = opts.level;
+  width = opts.width;
+  height = opts.height;
 
-	opts.weightMap = true;
-	map = new Map(opts);
+	// opts.weightMap = true;
+	// map = new Map(opts);
 	//Init AOI
   //aoi = aoiManager.getService(aoiConfig[id]);
 	// aoiEventManager.addEvent(aoi.aoi);
@@ -63,20 +67,31 @@ exp.init = function(opts){
 	run();
 };
 
-/**
- * @api public
- */
+// area run
 function run() {
-	// aiManager.start();
-	timer.run();
+  timer.run();
 }
 
+function addEvent(player) {
+  player.on('pickItem', function(args){
+    if(args.result != consts.Pick.SUCCESS){
+      logger.warn('Pick Item error! Result : ' + args.result)
+      return;
+    }
+
+    var item = args.item;
+    var player = args.player;
+
+    area.removeEntity(item.entityId);
+    channel.pushMessage({route: 'onPickItem', player: player.entityId, item: item.entityId, x: item.x, y: item.y})
+  });
+}
 /**
  * Add entity to area
  * @param {Object} e Entity to add to the area.
  */
-exp.addEntity = function(e){
-  if(!e || !e.entityId){
+exp.addEntity = function(e) {
+  if (!e || !e.entityId) {
     return false;
   }
 
@@ -84,8 +99,8 @@ exp.addEntity = function(e){
   eventManager.addEvent(e);
   
   if(e.type === EntityType.PLAYER){
-		channel.add(e.userId, e.serverId);
-		aiManager.addCharacters([e]);
+		channel.add(e.playerId, e.serverId);
+		// aiManager.addCharacters([e]);
 		
 		// aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
 		
@@ -93,19 +108,13 @@ exp.addEntity = function(e){
 			logger.error('add player twice! player : %j', e);
 		}
 		players[e.id] = e.entityId;
-	}else if(e.type === EntityType.MOB){
-		aiManager.addCharacters([e]);
-		
-		aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
-	}else if(e.type === EntityType.NPC){
-		
 	}else if(e.type === EntityType.ITEM){
 		items[e.entityId] = e.entityId;
 	}else if(e.type === EntityType.EQUIPMENT){
 		items[e.entityId] = e.entityId;
 	}
 
-	aoi.addObject({id:e.entityId, type:e.type}, {x: e.x, y: e.y});
+	// aoi.addObject({id:e.entityId, type:e.type}, {x: e.x, y: e.y});
 	return true;
 };
 
@@ -120,51 +129,18 @@ exp.removeEntity = function(entityId) {
 		return true;
   }
 
-	//If the entity belong to a subzone, remove it
-	if(!!zones[e.zoneId]) {
-		zones[e.zoneId].remove(entityId);
-	}
-
 	//If the entity is a player, remove it
 	if(e.type === 'player') {
-		channel.leave(e.userId, pomelo.serverId);
-		aiManager.removeCharacter(e.entityId);
-		patrolManager.removeCharacter(e.entityId);
-		aoi.removeObject({id:e.entityId, type: e.type}, {x: e.x, y: e.y});
+		channel.leave(e.playerId, e.serverId);
 		actionManager.abortAllAction(entityId);
-		
-		e.forEachEnemy(function(enemy) {
-      enemy.forgetHater(e.entityId);
-    });
-    
-    e.forEachHater(function(hater) {
-      hater.forgetEnemy(e.entityId);
-    });
-	
-    aoi.removeWatcher(e, {x : e.x, y: e.y}, e.range);
+			
     delete players[e.id];
-  }else if(e.type === 'mob') {
-    aiManager.removeCharacter(e.entityId);
-    patrolManager.removeCharacter(e.entityId);
-    aoi.removeObject({id: e.entityId, type: e.type}, {x: e.x, y: e.y});
-    actionManager.abortAllAction(entityId);
-    
-    e.forEachEnemy(function(enemy) {
-      enemy.forgetHater(e.entityId);
-    });
-    
-    e.forEachHater(function(hater) {
-      hater.forgetEnemy(e.entityId);
-    });
-    
-    aoi.removeWatcher(e, {x : e.x, y: e.y}, e.range);
   }else if(e.type === EntityType.ITEM){
 		delete items[entityId];
 	}else if(e.type === EntityType.EQUIPMENT){
 		delete items[entityId];
 	}
 
-	aoi.removeObject(e, {x: e.x, y: e.y});
   delete entities[entityId];
   return true;
 };
@@ -187,11 +163,11 @@ exp.getEntity = function(entityId){
  */
 exp.getEntities = function(ids){
 	var result = [];
-	for(var i = 0; i < ids.length; i++){
+	for (var i = 0; i < ids.length; i++) {
 		var entity = entities[ids[i]];
 		if(!!entity)
 			result.push(entity);
-	}	
+	}
 	
 	return result;
 };
@@ -233,48 +209,14 @@ exp.removePlayer = function(playerId){
  * @param {Object} pos Given position, like {10,20}.
  * @param {Number} range The range of the view, is the circle radius.
  */
-exp.getAreaInfo = function(pos, range){
-	var ids = aoi.getIdsByPos(pos, range);
-	var entities = this.getEntities(ids);
+exp.getAreaInfo = function() {
+	var entities = this.getAllEntities();
 	return {
 		id: id,
-		level: level,
 		entities : entities,
-		map : {
-			name: map.name,
-			width: map.width,
-			height: map.height
-		}
+    width: width,
+    height: height
 	};
-};
-
-/**
- * Get entities from area by given pos, types and range.
- * @param {Object} pos Given position, like {10,20}.
- * @param {Array} types The types of the object need to find.
- * @param {Number} range The range of the view, is the circle radius.
- */
-exp.getEntitiesByPos = function(pos, types, range){
-  var idsMap = aoi.getIdsByRange(pos, range, types);
-	var result = {};
-	for(var type in idsMap){
-    if(!result[type]){
-    	result[type] = [];
-  	}
-    for(var i = 0; i < idsMap[type].length; i++){
-      var id = idsMap[type][i];
-      if(!!entities[id]){
-        result[type].push(entities[id]);
-      }else{
-        logger.error('AOI data error ! type : %j, id : %j', type, id);
-      }
-    }
-  }
-  return result;
-};
-
-exp.id = function(){
-	return id;
 };
 
 exp.channel = function (){
@@ -289,31 +231,13 @@ exp.items = function(){
 	return items;
 };
 
-exp.zones = function(){
-	return zones;
-};
-
 exp.actionManager = function(){
 	return actionManager;
 };
 
-exp.aiManager = function(){
-	return aiManager;
-};
-
-exp.patrolManager = function(){
-	return patrolManager;
-};
-
-exp.aoi = function(){
-	return aoi;
-};
 
 exp.timer = function(){
 	return timer;
 };
 
-exp.map = function(){
-	return map;
-};
 
