@@ -21,6 +21,9 @@ __resources__["/main.js"] = {
             alert('server error!');
             return;
           }
+          if (data.host === '127.0.0.1') {
+            data.host = location.hostname;
+          };
           pomelo.init({host: data.host, port: data.port, log: true}, function() {
             if (callback) {
               callback();
@@ -35,8 +38,11 @@ __resources__["/main.js"] = {
       btn.onclick = function() {
         var name = document.querySelector('#login input').value;
         entry(name, function() {
-          pomelo.request({route: "area.playerHandler.enterScene", name: name}, function(data){
-            app.init(data.data);
+          pomelo.request({route: 'connector.entryHandler.entry', name: name}, function(data) {
+            pomelo.request({route: "area.playerHandler.enterScene", name: name, playerId: data.playerId}, function(data){
+              console.log(data);
+              app.init(data.data);
+            });
           });
         });
       };

@@ -13,6 +13,11 @@ utils.invokeCallback = function(cb) {
 	}
 };
 
+utils.rand = function (min, max) {
+  var n = max - min;
+  return min + Math.round(Math.random() * n);
+};
+
 utils.clone = function(o) {
 	var n = {};
 	for (var k in o) {

@@ -1,5 +1,6 @@
 // Module dependencies
 var area = require('../../../models/area');
+var Player = require('../../../models/player')
 //var messageService = require('../../../domain/messageService');
 //var world = require('../../../domain/world');
 //var Move = require('../../../domain/action/move');
@@ -22,12 +23,10 @@ var handler = module.exports;
  * @api public
  */
  handler.enterScene = function(msg, session, next) {
-  var playerId = session.playerId;
-  var areaId = session.areaId;
-
-  var player = new Player({id: session.playerId, name: session.playername, roleId: '1001'});
+  var player = new Player({id: msg.playerId, name: msg.name, kindId: '1001'});
 
   player.serverId = session.frontendId;
+  console.log(player);
 
   if (!area.addEntity(player)) {
     logger.error("Add player to area faild! areaId : " + player.areaId);
@@ -37,13 +36,12 @@ var handler = module.exports;
     });
     return;
   }
-  
-  var map = area.map();
+
   next(null, {
     code: consts.MESSAGE.RES,
     data: {
       area: area.getAreaInfo(), 
-      player: player
+      playerId: player.id
     }
   });
 };
@@ -61,7 +59,7 @@ handler.changeView = function(msg, session, next){
 	var width = msg.width;
 	var height = msg.height;
 
-	var radius = width>height ? width : height;
+	var radius = width > height ? width : height;
 
 	var range = Math.ceil(radius / 600);
 	var player = area.getPlayer(playerId);

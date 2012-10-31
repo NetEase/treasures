@@ -18,6 +18,8 @@ var exp = module.exports;
  * @api public
  */
 exp.playerLeave = function(args, cb) {
+  console.log('-----23');
+  console.log(args);
 	var areaId = args.areaId;
 	var playerId = args.playerId;
 	var player = area.getPlayer(playerId);

@@ -3,7 +3,7 @@ __resources__["/area.js"] = {
   data: function(exports, require, module, __filename, __dirname) {
     var Player = require('player');
     //var CurPlayer = require('curPlayer');
-    //var Map = require('map');
+    var Map = require('map');
     var ComponentAdder = require('componentAdder');
 
     var logic = require("logic");
@@ -25,7 +25,7 @@ __resources__["/area.js"] = {
     })();
 
     function Area(opts, mapData) {
-      this.id = 1;
+      this.id = opts.id || 1;
       this.playerId = opts.playerId;
       this.entities = {};
       this.players = {};
@@ -37,7 +37,7 @@ __resources__["/area.js"] = {
       this.gd = opts.gd;
       this.gv = opts.gv;
 
-      this.mapData = mapData;
+      // this.mapData = mapData;
       this.isStopped = false;
       this.init(opts);
     }
@@ -51,7 +51,7 @@ __resources__["/area.js"] = {
       this.initColorBox();
 
       // width , height should be invoked by map data
-      this.map = new Map({scene: this.scene, name: opts.map.name, pos: {x: 0, y: 0}, width: opts.map.width, height: opts.map.height});
+      this.map = new Map({scene: this.scene, pos: {x: 0, y: 0}, width: opts.width, height: opts.height});
       for (var key in opts.entities) {
         this.addEntity(opts.entities[key]);
       }
@@ -62,7 +62,7 @@ __resources__["/area.js"] = {
 
       var width = parseInt(getComputedStyle(document.getElementById("game")).width);
       var height = parseInt(getComputedStyle(document.getElementById("game")).height);
-      pomelo.notify({route: 'area.playerHandler.changeView', width: width, height: height});
+      // pomelo.notify({route: 'area.playerHandler.changeView', width: width, height: height});
 
       this.componentAdder.addComponent();
     };
@@ -129,17 +129,17 @@ __resources__["/area.js"] = {
         return false;
       }
       entity.scene = this.scene;
-      entity.map = this.map;
+      // entity.map = this.map;
 
       var e;
       switch (entity.type) {
         case 'player':
-          entity.walkSpeed = parseInt(entity.walkSpeed);
+          //entity.walkSpeed = parseInt(entity.walkSpeed);
         if (entity.id === pomelo.playerId) {
-          var player = pomelo.player;
-          player.scene = this.scene;
-          player.map = this.map;
-          e = new CurPlayer(player);
+          //var player = pomelo.player;
+          entity.scene = this.scene;
+          entity.map = this.map;
+          e = new Player(entity);
         } else {
           e = new Player(entity);
         }
@@ -225,7 +225,7 @@ __resources__["/area.js"] = {
         closure.skch.width = width;
         closure.skch.height = height;
 
-        pomelo.notify({route: 'area.playerHandler.changeView', width: width, height: height});
+        // pomelo.notify({route: 'area.playerHandler.changeView', width: width, height: height});
       };
     };
 

@@ -18,7 +18,7 @@ __resources__["/app.js"] = {
     var gv = null;
     var area = null;
     var resMgr = null;
-    var poolManager = null;
+    // var poolManager = null;
     var delayTime = null;
 
     /**
@@ -26,15 +26,16 @@ __resources__["/app.js"] = {
      * @param data {Object} The data for init area
      */
     function init(data) {
-      var mapData = data.mapData;
-      pomelo.player = data.curPlayer;
+      // var mapData = data.mapData;
+      changeView('game');
+      pomelo.playerId = data.playerId;
       if (inited) {
         configData(data.area);
-        area = new Area(data.area, mapData);
+        area = new Area(data.area);
       } else {
         initColorBox();
         configData(data.area);
-        area = new Area(data.area, mapData);
+        area = new Area(data.area);
 
         start();
 
@@ -42,14 +43,19 @@ __resources__["/app.js"] = {
       }
     }
 
+    function changeView(id) {
+      var cur = document.querySelector('.panel.current');
+      cur.className = cur.className.replace('current', '').trim();
+      var p = document.getElementById(id);
+      p.className = p.className + ' current';
+    }
+
     /**
      * Start area
      * @api private
      */
     function start() {
-      area.run(function() {
-        ///ui.hideLoading();
-      });
+      area.run();
     }
 
     /**

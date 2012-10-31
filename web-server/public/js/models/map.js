@@ -47,8 +47,9 @@ __resources__["/map.js"] = {
     pro.loadMap = function() {
       var pos = this.initPos;
 
-      var tmxUrl = url + 'map/' + this.name + ".tmx";
-      var mapUrl = url + 'map/' + this.name + ".jpg";
+      // var tmxUrl = url + 'map/' + this.name + ".tmx";
+      // var mapUrl = url + 'map/' + this.name + ".jpg";
+      var mapUrl = '/image/map.png'
 
       var mapImage = helper.loadImage(mapUrl);
 

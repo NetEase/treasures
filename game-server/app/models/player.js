@@ -1,7 +1,7 @@
 var util = require('util');
 var Entity = require('./entity');
-var dataApi = require('../../util/dataApi');
-var EntityType = require('../../consts/consts').EntityType;
+var dataApi = require('../util/dataApi');
+var EntityType = require('../consts/consts').EntityType;
 var logger = require('pomelo-logger').getLogger(__filename);
 var area = require('./area');
 
@@ -14,10 +14,13 @@ var area = require('./area');
  */
 
 function Player(opts) {
+  Entity.call(this, opts);
 	this.id = opts.id;
 	this.type = EntityType.PLAYER;
 	this.name = opts.name;
   this.walkSpeed = 240;
+  this.x = rand(800);
+  this.y = rand(800);
 
 	//this.roleData = dataApi.role.findById(this.kindId);
 	// this.range = opts.range || 2;
@@ -28,6 +31,9 @@ util.inherits(Player, Entity);
 
 module.exports = Player;
 
+function rand(n) {
+  return Math.round(Math.random() * n);
+}
 
 /**
  * Pick item.
@@ -83,6 +89,7 @@ Player.prototype.toJSON = function() {
     entityId: this.entityId,
     name: this.name,
     kindId: this.kindId,
+    type: this.type,
     x: this.x,
     y: this.y,
 		walkSpeed: this.walkSpeed,

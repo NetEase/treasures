@@ -1,6 +1,8 @@
 // Module dependencies
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
+var dataApi = require('../util/dataApi');
+var utils = require('../util/utils');
 
 var id = 1;
 
@@ -16,17 +18,27 @@ function Entity(opts) {
 	this.entityId = id++;
 	this.kindId = opts.kindId;
 	this.kindName = opts.kindName;
-	this.type = opts.type;
-	this.x = opts.x;
-	this.y = opts.y;
-	
 	this.areaId = opts.areaId || 1;
+
+  if (opts.x === undefined || opts.y === undefined) {
+    this.randPos();
+  } else {
+    this.x = opts.x;
+    this.y = opts.y;
+  }
+	
 }
 
 util.inherits(Entity, EventEmitter);
 
 module.exports = Entity;
 
+// random position
+Entity.prototype.randPos = function() {
+  var area = dataApi.area.findById(this.areaId);
+  this.x = utils.rand(20, area.width - 20);
+  this.y = utils.rand(20, area.height - 20);
+};
 
 /**
  * Get state

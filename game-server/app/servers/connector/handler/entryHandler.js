@@ -1,3 +1,5 @@
+var Code = require('../../../../../shared/code');
+
 module.exports = function(app) {
   return new Handler(app);
 };
@@ -24,23 +26,17 @@ pro.entry = function(msg, session, next) {
   var playerId = id++;
   session.bind(playerId);
   session.set('playerId', playerId);
-  session.set('playername', msg.name);
+  //session.set('playername', msg.name);
   session.set('areaId', 1);
   session.on('closing', onUserLeave.bind(null, self.app));
-  /*
-  var opts = {name:'pomelo', create:true};
-  self.app.rpc.chat.chatRemote.add(session, player.userId, self.app.get('serverId'), player.name, opts, function() {
-    next(null, {code: Code.OK, player: players ? players[0] : null});
-  });
-  */
+  next(null, {code: Code.OK, playerId: playerId});
 };
 
 var onUserLeave = function (app, session, reason) {
-  if(!session || !session.uid) {
+  if (!session || !session.uid) {
     return;
   }
-
-  app.rpc.area.playerRemote.playerLeave(session, {playerId:session.playerId, areaId: session.areaId}, null);
+  app.rpc.area.playerRemote.playerLeave(session, {playerId: session.playerId, areaId: session.areaId}, null);
   //app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), {areaId:session.areaId}, null);
   session.closed();
 };

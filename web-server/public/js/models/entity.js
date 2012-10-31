@@ -44,6 +44,10 @@ __resources__["/entity.js"] = {
       return {x: this.x, y: this.y};
     };
 
+    //Get sprite
+    Entity.prototype.getSprite = function() {
+      return this.sprite;
+    };
     /**
      * Destory entity. when the entity is killed or removed, it is invoke. 
      * 

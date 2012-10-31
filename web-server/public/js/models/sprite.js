@@ -18,7 +18,7 @@ __resources__["/sprite.js"] = {
     var consts = require('consts');
     var utils = require('utils');
     var dataApi = require('dataApi');
-    //var noEntityNode = require('noEntityNode');
+    var noEntityNode = require('noEntityNode');
     //var mainPanel = require('mainPanelView');
     var animation = require('animation');
 
@@ -179,12 +179,8 @@ __resources__["/sprite.js"] = {
           ori = 'RIGHT_' + actionName;
         }
         var name = aniName[ori];
-        var poolName = utils.getPoolName(this.entity.kindId, name, flipX);
-        var pool = app.getObjectPoolManager().getPool(poolName);
         var actionAnimation = null;
-        if (this.entity.type === EntityType.PLAYER || this.entity.type === EntityType.MOB) {
-          actionAnimation = this.getAnimationFromPool(this.entity.kindId, name, flipX);
-        } else {
+        if (this.entity.type === EntityType.PLAYER) {
           actionAnimation = new animation({
             kindId: this.entity.kindId,
             type: this.entity.type,
@@ -210,10 +206,10 @@ __resources__["/sprite.js"] = {
         actionAnimation.onFrameEnd = function(t, dt) {
           if (self.curNode && actionAnimation.isDone()) {
             callback();
-            if (!!pool) {
-              pool.returnObject(actionAnimation);
+            //if (!!pool) {
+              //pool.returnObject(actionAnimation);
               actionAnimation = null;
-            }
+            //}
           }
         }
         this.curNode.exec('addAnimation', actionAnimation);
@@ -224,8 +220,8 @@ __resources__["/sprite.js"] = {
     //Get animation from objectPool.
     Sprite.prototype.getAnimationFromPool = function(kindId, name, flipX) {
       var returnObject;
-      var poolName = utils.getPoolName(kindId, name, flipX);
-      var pool = app.getObjectPoolManager().getPool(poolName);
+      // var poolName = utils.getPoolName(kindId, name, flipX);
+      // var pool = app.getObjectPoolManager().getPool(poolName);
       if (!pool) {
         new objectPoolFactory().createPools(kindId, this.entity.type);
         pool = app.getObjectPoolManager().getPool(poolName);
@@ -255,7 +251,7 @@ __resources__["/sprite.js"] = {
       if (!this.curNode || !this.walkAnimation || !this.walkFrameLoop) {
         return;
       }
-      this.returnAnimation(this.walkAnimation);
+      // this.returnAnimation(this.walkAnimation);
       this.removeAnimation(this.walkAnimation);
       this.removeAnimation(this.walkFrameLoop);
       this.walkAnimation = null;
@@ -280,7 +276,7 @@ __resources__["/sprite.js"] = {
       if (!this.curNode || !this.standAnimation || !this.standFrameLoop) {
         return;
       }
-      this.returnAnimation(this.standAnimation);
+      // this.returnAnimation(this.standAnimation);
       this.removeAnimation(this.standAnimation);
       this.removeAnimation(this.standFrameLoop);
       this.standAnimation = null;
@@ -392,7 +388,7 @@ __resources__["/sprite.js"] = {
       if (!this.curNode || !this.attackAnimation) {
         return;
       }
-      this.returnAnimation(this.attackAnimation);
+      // this.returnAnimation(this.attackAnimation);
       this.removeAnimation(this.attackAnimation);
       this.attackAnimation = null;
     };

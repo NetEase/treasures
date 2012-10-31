@@ -1,6 +1,7 @@
 .project
 *.log
 logs/*
+*/logs/*
 */*.log
 !.gitignore
 node_modules/*

@@ -96,10 +96,11 @@ exp.addEntity = function(e) {
   }
 
   entities[e.entityId] = e;
-  eventManager.addEvent(e);
+  //eventManager.addEvent(e);
+  addEvent(e);
   
   if(e.type === EntityType.PLAYER){
-		channel.add(e.playerId, e.serverId);
+		channel.add(e.id, e.serverId);
 		// aiManager.addCharacters([e]);
 		
 		// aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
