@@ -46,7 +46,7 @@ Entity.prototype.randPos = function() {
  * @return {Object}
  * @api public
  */
-Entity.prototype.getPostion = function() {
+Entity.prototype.getPos = function() {
 	return {x: this.x, y: this.y};
 };
 
@@ -57,7 +57,7 @@ Entity.prototype.getPostion = function() {
  * @param {Number} y
  * @api public
  */
-Entity.prototype.setPosition = function(x, y) {
+Entity.prototype.setPos = function(x, y) {
 	this.x = x;
 	this.y = y;
 };

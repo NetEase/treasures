@@ -3,13 +3,14 @@ var area = require('../../../models/area');
 var Player = require('../../../models/player')
 //var messageService = require('../../../domain/messageService');
 //var world = require('../../../domain/world');
-//var Move = require('../../../domain/action/move');
+var Move = require('../../../models/action/move');
 //var actionManager = require('../../../domain/action/actionManager');
 var channelService = require('pomelo').channelService;
 var logger = require('pomelo-logger').getLogger(__filename);
 var app = require('pomelo').app;
 var consts = require('../../../consts/consts');
 var dataApi = require('../../../util/dataApi');
+var fs = require('fs');
 
 var handler = module.exports;
 
@@ -22,7 +23,7 @@ var handler = module.exports;
  * @param {Function} next
  * @api public
  */
- handler.enterScene = function(msg, session, next) {
+handler.enterScene = function(msg, session, next) {
   var player = new Player({id: msg.playerId, name: msg.name, kindId: '1001'});
 
   player.serverId = session.frontendId;
@@ -47,40 +48,31 @@ var handler = module.exports;
 };
 
 /**
- * Change player's view.
+ * Get player's animation data.
  *
  * @param {Object} msg
  * @param {Object} session
  * @param {Function} next
  * @api public
  */
-handler.changeView = function(msg, session, next){
-	var playerId = session.playerId;
-	var width = msg.width;
-	var height = msg.height;
-
-	var radius = width > height ? width : height;
-
-	var range = Math.ceil(radius / 600);
-	var player = area.getPlayer(playerId);
-
-	if(range < 0 || !player){
-		next(new Error('invalid range or player'), {
-      route: msg.route,
-			code: consts.MESSAGE.ERR
-		});
-		return;
-	}
-
-	if(player.range !== range){
-    timer.updateWatcher({id:player.entityId, type:player.type}, player, player, player.range, range);
-		player.range = range;
-	}
-
-	next(null, {
-    route: msg.route,
-		code: consts.MESSAGE.RES
-	});
+var animationData = null;
+handler.getAnimation = function(msg, session, next) {
+  var path = '../../../../config/animation_json/';
+  if (!animationData) {
+    var dir = './config/animation_json';
+    var name, reg = /\.json$/;
+    animationData = {};
+    fs.readdirSync(dir).forEach(function(file) {
+      if (reg.test(file)) {
+        name = file.replace(reg, '');
+        animationData[name] = require(path + file);
+      }
+    });
+  }  
+  next(null, {
+    code: consts.MESSAGE.RES,
+    data: animationData
+  });
 };
 
 /**
@@ -93,69 +85,39 @@ handler.changeView = function(msg, session, next){
  * @api public
  */
 handler.move = function(msg, session, next) {
-  var path = msg.path;
+  var endPos = msg.targetPos;
   var playerId = session.playerId;
   var player = area.getPlayer(playerId);
-  if(!player){
+  if (!player) {
     logger.error('Move without a valid player ! playerId : %j', playerId);
     next(new Error('invalid player:' + playerId), {
-      route: msg.route,
       code: consts.MESSAGE.ERR
     });
-		return;
+    return;
   }
-
-  var speed = player.walkSpeed;
-
-	if(player.died){
-		logger.warn('You can not move a died man! player: %j', player);
-		next(new Error('fail to move player for the player has died. playerId:' + playerId), {
-      route: msg.route,
-      code: consts.MESSAGE.ERR
-    });
-    
-		return;
-	}
 
   player.target = null;
 
-  if(!area.map().verifyPath(path)){
+  if (endPos.x > area.width() || endPos.y > area.height()) {
     logger.warn('The path is illigle!! The path is: %j', msg.path);
     next(new Error('fail to move for illegal path'), {
-      route: msg.route,
       code: consts.MESSAGE.ERR
     });
 
     return;
   }
 
-	/**
-	var startTime = new Date().getTime();
-	while(new Date().getTime() < 5 * 1000 + startTime) {
-
-	}
-	*/
-
   var action = new Move({
     entity: player,
-    path: path,
-    speed: speed
+    endPos: endPos,
   });
 
-	var ignoreList = {};
-	ignoreList[player.userId] = true;
-  if (timer.addAction(action)) {
-      messageService.pushMessageByAOI({
-      route: 'onMove',
-      entityId: player.entityId,
-      path: path,
-      speed: speed
-    }, path[0], ignoreList);
+  if (area.timer().addAction(action)) {
     next(null, {
-      route: msg.route,
-      code: consts.MESSAGE.RES
+      code: consts.MESSAGE.RES,
+      sPos: player.getPos()
     });
-    next();
+    area.channel().pushMessage({route: 'onMove', entityId: player.entityId, endPos: endPos});
   }
 };
 

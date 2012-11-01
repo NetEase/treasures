@@ -36,6 +36,7 @@ __resources__["/componentAdder.js"] = {
         if (event.type === 'mousePressed'){
           var endX = event.mouseX - sprite.getMapPosition().x;
           var endY = event.mouseY - sprite.getMapPosition().y;
+          /*
           var startX = sprite.getPosition().x;
           var startY = sprite.getPosition().y;
           var moveMessage = {
@@ -47,7 +48,8 @@ __resources__["/componentAdder.js"] = {
             areaId: area.id,
             speed: sprite.entity.walkSpeed
           };
-          clientManager.move(moveMessage);
+          */
+          clientManager.move({x: endX, y: endY});
         }
       };
 
@@ -67,12 +69,9 @@ __resources__["/componentAdder.js"] = {
         //add HoverEventComponent to entities
       };
 
+      //TODO
       var launchAi = function (event, node) {
-        console.log(node.id);
-        var id = node.id;
-        if (event.type === 'mouseClicked') {
-          clientManager.launchAi({id: id});
-        }
+        console.log('launchAi');
       };
 
     };

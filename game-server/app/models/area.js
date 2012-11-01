@@ -86,6 +86,19 @@ function addEvent(player) {
     channel.pushMessage({route: 'onPickItem', player: player.entityId, item: item.entityId, x: item.x, y: item.y})
   });
 }
+
+var added = [];
+var reduced = [];
+exp.entityUpdate = function() {
+  if (reduced.length > 0) {
+    channel.pushMessage({route: 'removeEntities', entities: reduced});
+    reduced = [];
+  }
+  if (added.length > 0) {
+    channel.pushMessage({route: 'addEntities', entities: added});
+    added = [];
+  }
+};
 /**
  * Add entity to area
  * @param {Object} e Entity to add to the area.
@@ -96,26 +109,22 @@ exp.addEntity = function(e) {
   }
 
   entities[e.entityId] = e;
-  //eventManager.addEvent(e);
   addEvent(e);
   
-  if(e.type === EntityType.PLAYER){
+  if (e.type === EntityType.PLAYER) {
 		channel.add(e.id, e.serverId);
-		// aiManager.addCharacters([e]);
 		
-		// aoi.addWatcher({id: e.entityId, type: e.type}, {x : e.x, y: e.y}, e.range);
-		
-		if(!!players[e.id]){
+		if (!!players[e.id]) {
 			logger.error('add player twice! player : %j', e);
 		}
 		players[e.id] = e.entityId;
-	}else if(e.type === EntityType.ITEM){
-		items[e.entityId] = e.entityId;
-	}else if(e.type === EntityType.EQUIPMENT){
-		items[e.entityId] = e.entityId;
+	} else if (e.type === EntityType.ITEM) {
+		//items[e.entityId] = e.entityId;
+	} else if (e.type === EntityType.EQUIPMENT) {
+		//items[e.entityId] = e.entityId;
 	}
 
-	// aoi.addObject({id:e.entityId, type:e.type}, {x: e.x, y: e.y});
+  added.push(e);
 	return true;
 };
 
@@ -126,23 +135,24 @@ exp.addEntity = function(e) {
  */
 exp.removeEntity = function(entityId) {
 	var e = entities[entityId];
-	if(!e) {
+	if (!e) {
 		return true;
   }
 
 	//If the entity is a player, remove it
-	if(e.type === 'player') {
-		channel.leave(e.playerId, e.serverId);
+	if (e.type === 'player') {
+		channel.leave(e.id, e.serverId);
 		actionManager.abortAllAction(entityId);
 			
     delete players[e.id];
-  }else if(e.type === EntityType.ITEM){
+  } else if (e.type === EntityType.ITEM){
 		delete items[entityId];
-	}else if(e.type === EntityType.EQUIPMENT){
+	} else if (e.type === EntityType.EQUIPMENT){
 		delete items[entityId];
 	}
 
   delete entities[entityId];
+  reduced.push(entityId);
   return true;
 };
 
@@ -220,6 +230,13 @@ exp.getAreaInfo = function() {
 	};
 };
 
+exp.width = function() {
+	return width;
+};
+
+exp.height = function() {
+	return height;
+};
 exp.channel = function (){
 	return channel;
 };

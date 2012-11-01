@@ -7,6 +7,8 @@ __resources__["/main.js"] = {
     var pomelo = window.pomelo;
     var config = require('config');
     var app = require('app');
+    var dataApi = require('dataApi');
+    var msgHandler = require('msgHandler');
 
     function main() {
       uiInit();
@@ -38,15 +40,35 @@ __resources__["/main.js"] = {
       btn.onclick = function() {
         var name = document.querySelector('#login input').value;
         entry(name, function() {
-          pomelo.request({route: 'connector.entryHandler.entry', name: name}, function(data) {
-            pomelo.request({route: "area.playerHandler.enterScene", name: name, playerId: data.playerId}, function(data){
-              console.log(data);
-              app.init(data.data);
+          loadAnimation(function() {
+            pomelo.request({route: 'connector.entryHandler.entry', name: name}, function(data) {
+              pomelo.request({route: "area.playerHandler.enterScene", name: name, playerId: data.playerId}, function(data){
+                console.log(data);
+                msgHandler.init();
+                app.init(data.data);
+              });
             });
           });
         });
       };
-    }
+    };
+
+    var jsonLoad = false;
+    var loadAnimation = function(callback) {
+      if (jsonLoad) {
+        if (callback) { 
+          callback();
+        }
+        return;
+      }
+      pomelo.request({route: 'area.playerHandler.getAnimation'}, function(result) {
+        dataApi.animation.set(result.data);
+        jsonLoad = true;
+        if (callback) {
+          callback();
+        }
+      });
+    };
 
     //主动调用main函数
     exports.main = main;

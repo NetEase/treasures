@@ -13,7 +13,7 @@ __resources__["/map.js"] = {
     //var xmlload = require('xmlload');
     //var buildFinder = require('pathfinding').buildFinder;
 
-    var Map = function(opts){
+    var Map = function(opts) {
       this.data = null;
       this.node = null;
       this.name = opts.name;

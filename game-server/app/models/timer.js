@@ -23,6 +23,7 @@ function tick(){
 
   //run all the action
   area.actionManager().update();
+  area.entityUpdate();
 
   // area.aiManager().update();
 
@@ -62,6 +63,6 @@ exp.abortAllAction = function(id){
  * @param newPos {Object} New position.
  * @return {Boolean} If the update success.
  */
-exp.updateObject = function(obj, oldPos, newPos){
+exp.updateObject = function(obj, oldPos, newPos) {
   return area.aoi().updateObject(obj, oldPos, newPos);
 };

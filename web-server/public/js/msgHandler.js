@@ -17,22 +17,6 @@ __resources__["/msgHandler.js"] = {
     function init() {
 
       /**
-       * Handle change area message
-       * @param data {Object} The message
-       */
-      pomelo.on('onChangeArea', function(data) {
-        if(!data.success) {
-          return;
-        }
-        clientManager.loadResource({jsonLoad: false}, function() {
-          pomelo.areaId = data.target;
-          pomelo.request({route:"area.playerHandler.enterScene", uid:pomelo.uid, playerId: pomelo.playerId, areaId: pomelo.areaId}, function(msg) {
-            app.init(msg.data);
-          });	
-        });
-      });
-
-      /**
        * Handle add entities message
        * @param data {Object} The message, contains entities to add
        */
@@ -64,7 +48,6 @@ __resources__["/msgHandler.js"] = {
             console.log('entities[i], player.entityId', entities[i], player.entityId);
             console.error('remove current player!');
           }
-          //console.log('remove entity: ' + entities[i])
         }
       })
 
@@ -75,17 +58,18 @@ __resources__["/msgHandler.js"] = {
 
       pomelo.on('onMove', function(data){
         var path = data.path;
-        var character = app.getCurArea().getEntity(data.entityId);
-        if(!character){
+        var entity = app.getCurArea().getEntity(data.entityId);
+        if(!entity){
           console.error('no character exist for move!' + data.entityId);
           return;
         }
 
-        var sprite = character.getSprite();
-        var totalDistance = utils.totalDistance(path);
-        var needTime = Math.floor(totalDistance / sprite.getSpeed() * 1000 - app.getDelayTime());
-        var speed = totalDistance/needTime * 1000;
-        sprite.movePath(path, speed);
+        var sprite = entity.getSprite();
+        var sPos = sprite.getPosition();
+        //var totalDistance = utils.totalDistance(path);
+        //var needTime = Math.floor(totalDistance / sprite.getSpeed() * 1000 - app.getDelayTime());
+        //var speed = totalDistance/needTime * 1000;
+        sprite.movePath([sPos, data.endPos]);
       });
 
       pomelo.on('onPathCheckout', function(data) {
