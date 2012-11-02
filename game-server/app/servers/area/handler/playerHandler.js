@@ -24,7 +24,8 @@ var handler = module.exports;
  * @api public
  */
 handler.enterScene = function(msg, session, next) {
-  var player = new Player({id: msg.playerId, name: msg.name, kindId: '1001'});
+  var role = dataApi.role.random();
+  var player = new Player({id: msg.playerId, name: msg.name, kindId: role.id});
 
   player.serverId = session.frontendId;
   console.log(player);
@@ -96,7 +97,8 @@ handler.move = function(msg, session, next) {
     return;
   }
 
-  player.target = null;
+  var target = area.getEntity(msg.target);
+  player.target = target ? target.entityId : null;
 
   if (endPos.x > area.width() || endPos.y > area.height()) {
     logger.warn('The path is illigle!! The path is: %j', msg.path);
@@ -131,14 +133,12 @@ handler.move = function(msg, session, next) {
  * @param {Function} next
  * @api public
  */
-
 handler.pickItem = function(msg, session, next) {
   var player = area.getPlayer(session.playerId);
   var target = area.getEntity(msg.targetId);
-  if(!player || !target || (target.type !== consts.EntityType.ITEM && target.type !== consts.EntityType.EQUIPMENT)){
+  if (!player || !target ||  target.type !== consts.EntityType.TREASURE) {
     logger.error("can't find player or target! areaId : %j, playerId : %j, targetId : %j", session.areaId, session.playerId, msg.targetId);
     next(new Error('invalid player or target'), {
-      route: msg.route,
       code: consts.MESSAGE.ERR
     });
     return;
@@ -146,7 +146,6 @@ handler.pickItem = function(msg, session, next) {
 
   player.target = target.entityId;
   next(null, {
-    route: msg.route,
     code: consts.MESSAGE.RES
   });
 };

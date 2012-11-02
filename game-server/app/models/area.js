@@ -9,6 +9,7 @@ var ActionManager = require('./action/actionManager');
 var timer = require('./timer');
 var EntityType = require('../consts/consts').EntityType;
 var logger = require('pomelo-logger').getLogger(__filename);
+var Treasure = require('./treasure');
 
 var exp = module.exports;
 
@@ -17,21 +18,14 @@ var width = 0;
 var height = 0;
 
 var actionManager = null;
-// var aiManager = null;
-// var patrolManager = null;
-
 //The map from player to entity
 var players = {};
 
 var entities = {};
 
-// var zones = {};
-
-var items = {};
-
 var channel = null;
 
-// var aoi = null;
+var treasureCount = 0;
 
 /**
  * Init areas
@@ -39,30 +33,14 @@ var channel = null;
  * @api public
  */
 exp.init = function(opts){
-	//Init Map
 	id = opts.id;
   width = opts.width;
   height = opts.height;
 
-	// opts.weightMap = true;
-	// map = new Map(opts);
-	//Init AOI
-  //aoi = aoiManager.getService(aoiConfig[id]);
-	// aoiEventManager.addEvent(aoi.aoi);
-
-	//Init mob zones
-	// initMobZones(map.getMobZones());
-
-	// initNPCs(this);
-
-	//create local channel
-	channel = channelService.getLocalChannelSync({name:'area_' + id, create:true});
-
-	// aiManager = ai.createManager();
-
-	// patrolManager = patrol.createManager({area:this});
+	channel = channelService.getChannel('area_' + id, true);
 
 	actionManager = new ActionManager();
+  exp.generateTreasures(40);
 
 	run();
 };
@@ -73,21 +51,19 @@ function run() {
 }
 
 function addEvent(player) {
-  player.on('pickItem', function(args){
-    if(args.result != consts.Pick.SUCCESS){
-      logger.warn('Pick Item error! Result : ' + args.result)
-      return;
-    }
-
-    var item = args.item;
-    var player = args.player;
-
-    area.removeEntity(item.entityId);
-    channel.pushMessage({route: 'onPickItem', player: player.entityId, item: item.entityId, x: item.x, y: item.y})
+  player.on('pickItem', function(args) {
+    var player = exp.getEntity(args.entityId);
+    player.target = null;
+    console.log(player);
+    player.treasureCount++;
+    exp.removeEntity(args.target);
+    channel.pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, treasureCount: player.treasureCount});
   });
 }
 
+// the added entities in one tick
 var added = [];
+// the reduced entities in one tick
 var reduced = [];
 exp.entityUpdate = function() {
   if (reduced.length > 0) {
@@ -109,19 +85,17 @@ exp.addEntity = function(e) {
   }
 
   entities[e.entityId] = e;
-  addEvent(e);
   
   if (e.type === EntityType.PLAYER) {
 		channel.add(e.id, e.serverId);
+    addEvent(e);
 		
 		if (!!players[e.id]) {
 			logger.error('add player twice! player : %j', e);
 		}
 		players[e.id] = e.entityId;
-	} else if (e.type === EntityType.ITEM) {
-		//items[e.entityId] = e.entityId;
-	} else if (e.type === EntityType.EQUIPMENT) {
-		//items[e.entityId] = e.entityId;
+	} else if (e.type === EntityType.TREASURE) {
+    treasureCount++;
 	}
 
   added.push(e);
@@ -139,16 +113,16 @@ exp.removeEntity = function(entityId) {
 		return true;
   }
 
-	//If the entity is a player, remove it
-	if (e.type === 'player') {
+	if (e.type === EntityType.PLAYER) {
 		channel.leave(e.id, e.serverId);
 		actionManager.abortAllAction(entityId);
 			
     delete players[e.id];
-  } else if (e.type === EntityType.ITEM){
-		delete items[entityId];
-	} else if (e.type === EntityType.EQUIPMENT){
-		delete items[entityId];
+  } else if (e.type === EntityType.TREASURE) {
+    treasureCount--;
+    if (treasureCount < 25) {
+      exp.generateTreasures(15);
+    }
 	}
 
   delete entities[entityId];
@@ -160,56 +134,59 @@ exp.removeEntity = function(entityId) {
  * Get entity from area
  * @param {Number} entityId.
  */
-exp.getEntity = function(entityId){
-	var entity = entities[entityId];
-  if (!entity) {
-		return null;
-	}
-  return entity;
+exp.getEntity = function(entityId) {
+  return entities[entityId];
 };
 
 /**
  * Get entities by given id list
  * @param {Array} The given entities' list.
  */
-exp.getEntities = function(ids){
+exp.getEntities = function(ids) {
 	var result = [];
 	for (var i = 0; i < ids.length; i++) {
 		var entity = entities[ids[i]];
-		if(!!entity)
+		if (entity) {
 			result.push(entity);
+    }
 	}
 	
 	return result;
 };
 
-exp.getAllPlayers = function(){
+exp.getAllPlayers = function() {
 	var _players = [];
-	for(var id in players){
+	for (var id in players) {
 		_players.push(entities[players[id]]);
 	}	
 	
 	return _players;
-}
+};
+
+exp.generateTreasures = function (n) {
+  if (!n) {
+    return;
+  }
+  for (var i = 0; i < n; i++) {
+    var d = dataApi.treasure.random();
+    var t = new Treasure({kindId: d.id, kindName: d.name, imgId: d.imgId});
+    exp.addEntity(t);
+  }
+};
 
 exp.getAllEntities = function() {
 	return entities;
 };
 
-exp.getPlayer = function(playerId){
+exp.getPlayer = function(playerId) {
 	var entityId = players[playerId];
-
-	if(!!entityId) {
-		return entities[entityId];
-  }
-  
-	return null;
+  return entities[entityId];
 };
 
-exp.removePlayer = function(playerId){
+exp.removePlayer = function(playerId) {
 	var entityId = players[playerId];
 
-	if(!!entityId){
+	if (entityId) {
 		delete players[playerId];
 		this.removeEntity(entityId);
 	}
@@ -217,8 +194,6 @@ exp.removePlayer = function(playerId){
 
 /**
  * Get area entities for given postion and range.
- * @param {Object} pos Given position, like {10,20}.
- * @param {Number} range The range of the view, is the circle radius.
  */
 exp.getAreaInfo = function() {
 	var entities = this.getAllEntities();
@@ -237,25 +212,23 @@ exp.width = function() {
 exp.height = function() {
 	return height;
 };
-exp.channel = function (){
+exp.channel = function () {
 	return channel;
 };
 
-exp.entities = function (){
+exp.entities = function () {
 	return entities;
 };
 
-exp.items = function(){
-	return items;
-};
-
-exp.actionManager = function(){
+exp.actionManager = function() {
 	return actionManager;
 };
 
-
-exp.timer = function(){
+exp.timer = function() {
 	return timer;
 };
 
+exp.getDistance = function(pos1, pos2) {
+	return Math.sqrt(Math.pow((pos1.x - pos2.x), 2) + Math.pow((pos1.y - pos2.y), 2));
+};
 

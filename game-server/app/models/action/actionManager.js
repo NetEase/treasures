@@ -21,8 +21,9 @@ var ActionManager = function(opts){
  * @param {Object} action  The action to add, the order will be preserved
  */
 ActionManager.prototype.addAction = function(action){
-	if(action.singleton)
+	if (action.singleton) {
 		this.abortAction(action.type, action.id);
+  }
 		
 	this.actionMap[action.type] = this.actionMap[action.type]||{};
 	
@@ -36,8 +37,8 @@ ActionManager.prototype.addAction = function(action){
  * @param {String} type Given type of the action
  * @param {String} id The action id
  */
-ActionManager.prototype.abortAction = function(type, id){
-  if(!this.actionMap[type] || !this.actionMap[type][id]){
+ActionManager.prototype.abortAction = function(type, id) {
+  if (!this.actionMap[type] || !this.actionMap[type][id]) {
 		return;
   }
 	

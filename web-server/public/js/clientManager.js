@@ -7,25 +7,30 @@ __resources__["/clientManager.js"] = {
 		var EntityType = require('consts').EntityType;
 		//var utils = require('utils');
 
-    // checkout the moveAimation
     function move(targetPos) {
-      pomelo.request({route: 'area.playerHandler.move', targetPos: targetPos}, function(result) {
+      pomelo.request('area.playerHandler.move', {targetPos: targetPos}, function(result) {
         if (result.code == 200) {
-          
-          var sprite = app.getCurPlayer().getSprite();
-          var sPos = result.sPos;
-          console.log(result);
-					sprite.translateTo(sPos.x, sPos.y);
-        }else {
+          // var sprite = app.getCurPlayer().getSprite();
+          // var sPos = result.sPos;
+					// sprite.translateTo(sPos.x, sPos.y);
+        } else {
           console.warn('curPlayer move error!');
         }
       });
-      // sprite.movePath(paths.path);
     }
 
+    function pick(args) {
+      var targetId = args.id;
+      var entity = app.getCurArea().getEntity(targetId);
+     
+      if (entity.type === EntityType.TREASURE) {
+        // pomelo.notify('area.playerHandler.pickItem', {targetId: targetId});
+        pomelo.notify('area.playerHandler.move', {targetPos: {x: entity.x, y: entity.y}, target: targetId});
+      }
+    }
 
-    //暴露的接口和对象
     exports.move = move;
+    exports.pick = pick;
   }
 };
 

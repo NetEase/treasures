@@ -15,51 +15,41 @@ __resources__["/msgHandler.js"] = {
     exports.init = init;
 
     function init() {
-
-      /**
-       * Handle add entities message
-       * @param data {Object} The message, contains entities to add
-       */
-      pomelo.on('addEntities', function(data){
+      // add entities
+      pomelo.on('addEntities', function(data) {
         var entities = data.entities;
         var area = app.getCurArea();
-        if(!area)
+        if (!area) {
           return;
-        for(var i = 0; i < entities.length; i++){
+        }
+        for (var i = 0; i < entities.length; i++) {
           var entity = area.getEntity(entities[i].entityId);
-          if(!entity){
+          if (!entity) {
             area.addEntity(entities[i]);
           }
         }
       });
 
-      /**
-       * Handle remove entities message
-       * @param data {Object} The message, contains entitiy ids to remove
-       */
-      pomelo.on('removeEntities', function(data){
+      //Handle remove entities message
+      pomelo.on('removeEntities', function(data) {
         var entities = data.entities;
         var area = app.getCurArea();
         var player = area.getCurPlayer();
-        for(var i = 0; i < entities.length; i++){
-          if(entities[i] != player.entityId)
+        for (var i = 0; i < entities.length; i++) {
+          if (entities[i] != player.entityId) {
             area.removeEntity(entities[i]);
-          else {
+          } else {
             console.log('entities[i], player.entityId', entities[i], player.entityId);
             console.error('remove current player!');
           }
         }
-      })
+      });
 
-      /**
-       * Handle move  message
-       * @param data {Object} The message, contains move information
-       */
-
-      pomelo.on('onMove', function(data){
+      // Handle move  message
+      pomelo.on('onMove', function(data) {
         var path = data.path;
         var entity = app.getCurArea().getEntity(data.entityId);
-        if(!entity){
+        if (!entity) {
           console.error('no character exist for move!' + data.entityId);
           return;
         }
@@ -72,28 +62,8 @@ __resources__["/msgHandler.js"] = {
         sprite.movePath([sPos, data.endPos]);
       });
 
-      pomelo.on('onPathCheckout', function(data) {
-        var player = app.getCurArea().getEntity(data.entityId);
-        var serverPosition = data.position;
-        var clientposition = player.getSprite().getPosition();
-        var realDistance = utils.distance(serverPosition.x, serverPosition.y, clientposition.x, clientposition.y);
-        var distanceLimit = 100;
-
-
-        if (realDistance > distanceLimit) {
-          console.error('path checkout!!!');
-          player.getSprite().translateTo(serverPosition.x, serverPosition.y);	
-        }
-
-
-      });
-
-
-      /**
-       * Handle player drop items message
-       * @param data {Object} The message, contains items to add in the area
-       */
-      pomelo.on('onDropItems' , function(data) {
+      // Handle player drop items message
+      pomelo.on('onDropItems', function(data) {
         var items = data.dropItems;
         var area = app.getCurArea();
         for (var i = 0; i < items.length; i ++) {
@@ -101,30 +71,39 @@ __resources__["/msgHandler.js"] = {
         }
       });
 
-
-      /**
-       * Handle remove item message
-       * @param data {Object} The message, contains the info for remove item
-       */
-      pomelo.on('onRemoveItem', function(data){
+      // Handle remove item message
+      pomelo.on('onRemoveItem', function(data) {
         app.getCurArea().removeEntity(data.entityId);
       });
 
-      /**
-       * Handle pick item message
-       * @param data {Object} The message, contains the info for pick item
-       */
+      // Handle pick item message
       pomelo.on('onPickItem', function(data) {
         var area = app.getCurArea();
-        var player = area.getEntity(data.player);
-        var item = area.getEntity(data.item);
-        //Only add item for current player
-        if(player.entityId === area.getCurPlayer().entityId){
-          player.bag.addItem({id: item.kindId, type: item.type});
-        }
-        area.removeEntity(data.item);
+        var player = area.getEntity(data.entityId);
+        var item = area.getEntity(data.target);
+        player.treasureCount = data.treasureCount;
+        player.getSprite().updateName(player.name + ' - ' + player.treasureCount);
+        area.removeEntity(item.entityId);
       });
 
+      // Handle kick out messge, occours when the current player is kicked out
+      pomelo.on('onKick', function() {
+        console.log('You have been kicked offline for the same account logined in other place.');
+        app.changeView("login");
+      });
+
+      // Handle disconect message, occours when the client is disconnect with servers
+      pomelo.on('disconnect', function(reason) {
+        app.changeView("login");
+      });
+
+      // Handle user leave message, occours when players leave the area
+      pomelo.on('onUserLeave', function(data) {
+        var area = app.getCurArea();
+        var playerId = data.playerId;
+        console.log('onUserLeave invoke!');
+        area.removePlayer(playerId);
+      });
 
     }
 
@@ -142,28 +121,6 @@ __resources__["/msgHandler.js"] = {
       data.attacker.update({mpUse: data.resultData.mpUse});
       data.targetSprite.reduceBlood();
       data.targetSprite.createNumberNodes(data.resultData.damage);
-    };
-
-    /**
-     * the action invokes when the result is killed
-     * @param {Object} data 
-     */
-    var killedAction = function(data) {
-      data.target.died = true;
-      if (data.target.type === EntityType.MOB) {
-        data.target = null;
-      }
-      new skillEffect(data.skillEffectParams).createEffectAni();
-      var attackerSprite = data.attackerSprite;
-      var attackerPos = data.attackerPos;
-      attackerSprite.translateTo(attackerPos.x, attackerPos.y);
-      data.attackerSprite.attack({x1: data.attackerPos.x, y1: data.attackerPos.y, x2: data.targetPos.x, y2: data.targetPos.y}, 'killed');
-      data.targetSprite.createNumberNodes(data.resultData.damage);
-      data.targetSprite.zeroBlood();
-      if (data.attacker.type === EntityType.PLAYER) {
-        data.attacker.update({mpUse: data.resultData.mpUse, experience: data.experience});
-      }
-      data.targetSprite.died({x1: data.targetPos.x, y1: data.targetPos.y, x2: data.attackerPos.x, y2: data.attackerPos.y});
     };
 
     var uiUpdate = function() {

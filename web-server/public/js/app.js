@@ -126,6 +126,7 @@ __resources__["/app.js"] = {
     exports.getResMgr = getResMgr;
     exports.getCurArea = getArea;
     exports.getCurPlayer = getCurPlayer;
+    exports.changeView = changeView;
   }
 };
 

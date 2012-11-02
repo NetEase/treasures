@@ -33,7 +33,7 @@ __resources__["/sprite.js"] = {
      */
     function Sprite(opts) {
       this.entity = opts;
-      this.mapNode = this.entity.map.node; 
+      this.mapNode = this.entity.map.node;
       this.curNode = null;
       this.bloodbarNode = null;
 
@@ -60,7 +60,7 @@ __resources__["/sprite.js"] = {
       var type = this.entity.type;
       if (type === EntityType.PLAYER || type === EntityType.MOB) {
         this._initDynamictNode(aniOrientation.LEFT+startAin);
-      } else if (type === EntityType.NPC || type === EntityType.ITEM || type === EntityType.EQUIPMENT) {
+      } else if (type === EntityType.ITEM || type === EntityType.TREASURE) {
         this._initStaticNode();
       }
     };
@@ -75,13 +75,10 @@ __resources__["/sprite.js"] = {
       var x = this.entity.x, y = this.entity.y;
       var staticImg = null;
       switch(this.entity.type) {
-        case EntityType.NPC: 
-          staticImg =  ResMgr.loadImage(imgAndJsonUrl + 'npc/' + this.entity.kindId + '/stand' + '/frame_0.png');
-        break;
         case EntityType.ITEM:
           staticImg = ResMgr.loadImage(imgAndJsonUrl + 'item/' + this.entity.imgId + '.png');
         break;
-        case EntityType.EQUIPMENT:
+        case EntityType.TREASURE:
           staticImg = ResMgr.loadImage(imgAndJsonUrl + 'equipment/60/' + this.entity.imgId + '.png');
         break;
       }
@@ -127,6 +124,7 @@ __resources__["/sprite.js"] = {
       this.nameNode = noEntityNode.createNameNode(this.entity);
       this.entity.scene.addNode(this.nameNode, frameNode);
       if (this.entity.type === EntityType.PLAYER || this.entity.type === EntityType.MOB) {
+        /*
         var bloodbarNodes = noEntityNode.createBloodbarNodes({scene: this.entity.scene});
         this.bloodbarNode = bloodbarNodes.redBloodBarNode;
         var darkBloodBarNode = bloodbarNodes.darkBloodBarNode;
@@ -141,16 +139,17 @@ __resources__["/sprite.js"] = {
         var height = json.height + 10;
         this.bloodbarNode.exec('translate', -26, -height, NodeCoordinate.RED_BLOOD_NODE);
         darkBloodBarNode.exec('translate', -26, -height, NodeCoordinate.BLACK_BLOOD_NODE);
-        this.nameNode.exec('translate',0 ,-(height + 10), NodeCoordinate.NAME_NODE);
-        this.reduceBlood();
+        */
+        this.nameNode.exec('translate', 0 , -120, NodeCoordinate.NAME_NODE);
+        //this.reduceBlood();
       }
       this._initStand();
     };
 
     //Update entity' name.
-    Sprite.prototype.updateName = function() {
-      var name = this.entity.name + '-' + this.entity.level;
-      this.nameNode.model.text = name; 
+    Sprite.prototype.updateName = function(name) {
+      // var name = this.entity.name + '-' + this.entity.level;
+      this.nameNode.model().text = name;
     };
 
     /**

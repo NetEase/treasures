@@ -10,17 +10,6 @@ exp.run = function (){
 
 function tick(){
 
-  //Update all the items
-  for(var id in area.items()){
-    var item = area.entities()[id];
-    item.update();
-
-    if(item.died){
-      area.channel().pushMessage({route:'onRemoveItem', entityId:id});
-      area.removeEntity(id);
-    }
-  }
-
   //run all the action
   area.actionManager().update();
   area.entityUpdate();

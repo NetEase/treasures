@@ -1,6 +1,6 @@
 var Action = require('./action');
 var util = require('util');
-//var area = require('../area/area');
+var area = require('../area');
 //var timer = require('../area/timer');
 //var consts = require('../../consts/consts');
 //var logger = require('pomelo-logger').getLogger(__filename);
@@ -25,24 +25,33 @@ Move.prototype.update = function() {
 	var time = Date.now() - this.time;
   var speed = this.entity.walkSpeed;
   var moveLength = speed * time / 1000;
-  var curPos = getPos(this.entity.getPos(), this.endPos, moveLength);
+  var dis = getDis(this.entity.getPos(), this.endPos);
+  if (dis < moveLength) {
+    this.finished = true;
+    return;
+  } else if (dis < 55 && this.entity.target) {
+    this.entity.emit('pickItem', {entityId: this.entity.entityId, target: this.entity.target});
+  }
+  var curPos = getPos(this.entity.getPos(), this.endPos, moveLength, dis);
   this.entity.setPos(curPos.x, curPos.y);
 
   this.time = Date.now();
 };
 
 function getDis(pos1, pos2) {
-	return Math.sqrt(Math.pow((pos1.x - pos2.x), 2) + Math.pow((pos1.y - pos2.y), 2));
+  return Math.sqrt(Math.pow((pos1.x - pos2.x), 2) + Math.pow((pos1.y - pos2.y), 2));
 }
 
-function getPos(start, end, dis) {
-	var length = getDis(start, end);
-	var pos = {};
+function getPos(start, end, moveLength, dis) {
+  if (!dis) {
+    dis = getDis(start, end);
+  }
+  var pos = {};
 
-	pos.x = Math.round(end.x - (end.x - start.x) * (dis / length));
-	pos.y = Math.round(end.y - (end.y - start.y) * (dis / length));
+  pos.x = Math.round(start.x + (end.x - start.x) * (moveLength / dis));
+  pos.y = Math.round(start.y + (end.y - start.y) * (moveLength / dis));
 
-	return pos;
+  return pos;
 }
 
 module.exports = Move;

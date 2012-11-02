@@ -25,14 +25,11 @@ __resources__["/noEntityNode.js"] = {meta: {mimetype: "application/javascript"},
     fill = 'rgb(255,0,0)';
     switch(data.type) {
       case EntityType.PLAYER: 
-        name = data.name + ' - ' + data.level;
+        name = data.name + ' - ' + data.treasureCount;
         break;
-      case EntityType.MOB:
-        name = data.kindName + ' - ' + data.level + '-' + data.entityId;
-        font = '';
-        break;
-      case EntityType.NPC:
+      case EntityType.TREASURE:
         name = data.kindName;
+        font = '';
         break;
       default:
         name = data.name;

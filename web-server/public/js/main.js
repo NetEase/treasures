@@ -14,9 +14,9 @@ __resources__["/main.js"] = {
       uiInit();
     }
 
-    function entry (name, callback) {
+    function entry(name, callback) {
       pomelo.init({host: config.GATE_HOST, port: config.GATE_PORT, log: true}, function() {
-        pomelo.request({route: 'gate.gateHandler.queryEntry', uid: name}, function(data) {
+        pomelo.request('gate.gateHandler.queryEntry', {uid: name}, function(data) {
           pomelo.disconnect();
 
           if (data.code === 2001) {
@@ -25,7 +25,8 @@ __resources__["/main.js"] = {
           }
           if (data.host === '127.0.0.1') {
             data.host = location.hostname;
-          };
+          }
+          console.log(data);
           pomelo.init({host: data.host, port: data.port, log: true}, function() {
             if (callback) {
               callback();
@@ -41,8 +42,8 @@ __resources__["/main.js"] = {
         var name = document.querySelector('#login input').value;
         entry(name, function() {
           loadAnimation(function() {
-            pomelo.request({route: 'connector.entryHandler.entry', name: name}, function(data) {
-              pomelo.request({route: "area.playerHandler.enterScene", name: name, playerId: data.playerId}, function(data){
+            pomelo.request('connector.entryHandler.entry', {name: name}, function(data) {
+              pomelo.request("area.playerHandler.enterScene", {name: name, playerId: data.playerId}, function(data){
                 console.log(data);
                 msgHandler.init();
                 app.init(data.data);
@@ -61,7 +62,7 @@ __resources__["/main.js"] = {
         }
         return;
       }
-      pomelo.request({route: 'area.playerHandler.getAnimation'}, function(result) {
+      pomelo.request('area.playerHandler.getAnimation', function(result) {
         dataApi.animation.set(result.data);
         jsonLoad = true;
         if (callback) {

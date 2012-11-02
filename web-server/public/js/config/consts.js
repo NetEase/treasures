@@ -48,7 +48,8 @@ __resources__["/consts.js"] = {
         NPC: 'npc',
         MOB: 'mob',
         EQUIPMENT: 'equipment',
-        ITEM: 'item'
+        ITEM: 'item',
+        TREASURE: 'treasure'
       },
 
       AttackResult: {

@@ -2,8 +2,7 @@
 var area = require('../../config/data/area');
 var character = require('../../config/data/character');
 var role = require('../../config/data/role');
-var item = require('../../config/data/item');
-var equipment = require('../../config/data/equipment');
+var treasure = require('../../config/data/treasure');
 
 /**
  * Data model `new Data()`
@@ -18,13 +17,15 @@ var Data = function(data) {
   });
   data.splice(0, 2);
 
-  var result = {}, item;
+  var result = {}, ids = [], item;
   data.forEach(function(k) {
     item = mapData(fields, k);
     result[item.id] = item;
+    ids.push(item.id);
   });
 
   this.data = result;
+  this.ids = ids;
 };
 
 /**
@@ -64,33 +65,6 @@ Data.prototype.findBy = function(attr, value) {
   return result;
 };
 
-Data.prototype.findBigger = function(attr, value) {
-  var result = [];
-  value = Number(value);
-  //console.log(' findBy ' + attr + '  value:' + value + '  index: ' + index);
-  var i, item;
-  for (i in this.data) {
-    item = this.data[i];
-    if (Number(item[attr]) >= value) {
-      result.push(item);
-    }
-  }
-  return result;
-};
-
-Data.prototype.findSmaller = function(attr, value) {
-  var result = [];
-  value = Number(value);
-  //console.log(' findBy ' + attr + '  value:' + value + '  index: ' + index);
-  var i, item;
-  for (i in this.data) {
-    item = this.data[i];
-    if (Number(item[attr]) <= value) {
-      result.push(item);
-    }
-  }
-  return result;
-};
 /**
  * find item by id
  *
@@ -100,6 +74,12 @@ Data.prototype.findSmaller = function(attr, value) {
  */
 Data.prototype.findById = function(id) {
   return this.data[id];
+};
+
+Data.prototype.random = function() {
+  var length = this.ids.length;
+  var rid =  this.ids[Math.floor(Math.random() * length)];
+  return this.data[rid];
 };
 
 /**
@@ -116,8 +96,7 @@ module.exports = {
   area: new Data(area),
   role: new Data(role),
   character: new Data(character),
-  equipment: new Data(equipment),
-  item: new Data(item)
+  treasure: new Data(treasure)
 };
 
 //Data(talk);

@@ -2,7 +2,7 @@ __resources__["/area.js"] = {
   meta: {mimetype: "application/javascript"}, 
   data: function(exports, require, module, __filename, __dirname) {
     var Player = require('player');
-    //var CurPlayer = require('curPlayer');
+    var Treasure = require('treasure');
     var Map = require('map');
     var ComponentAdder = require('componentAdder');
 
@@ -129,24 +129,16 @@ __resources__["/area.js"] = {
         return false;
       }
       entity.scene = this.scene;
-      // entity.map = this.map;
+      entity.map = this.map;
 
       var e;
       switch (entity.type) {
-        case 'player':
-          //entity.walkSpeed = parseInt(entity.walkSpeed);
-        if (entity.id === pomelo.playerId) {
-          //var player = pomelo.player;
-          entity.scene = this.scene;
-          entity.map = this.map;
+        case 'player': 
           e = new Player(entity);
-        } else {
-          e = new Player(entity);
-        }
-        this.players[e.id] = e.entityId;
+          this.players[e.id] = e.entityId;
         break;
-        case 'item':
-          e = new Item(entity);
+        case 'treasure':
+          e = new Treasure(entity);
         break;
         default:
           return false;

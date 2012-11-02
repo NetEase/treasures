@@ -19,8 +19,8 @@ function Player(opts) {
 	this.type = EntityType.PLAYER;
 	this.name = opts.name;
   this.walkSpeed = 240;
-  this.x = rand(800);
-  this.y = rand(800);
+  this.treasureCount = opts.treasureCount || 0;
+  this.target = null;
 
 	//this.roleData = dataApi.role.findById(this.kindId);
 	// this.range = opts.range || 2;
@@ -30,10 +30,6 @@ function Player(opts) {
 util.inherits(Player, Entity);
 
 module.exports = Player;
-
-function rand(n) {
-  return Math.round(Math.random() * n);
-}
 
 /**
  * Pick item.

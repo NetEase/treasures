@@ -21,7 +21,7 @@ __resources__["/player.js"] = {
       this.target = null;
 
       //status
-      this.died = false;
+      // this.died = false;
       Entity.call(this, opts);
     }
 

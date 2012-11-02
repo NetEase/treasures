@@ -71,7 +71,9 @@ __resources__["/componentAdder.js"] = {
 
       //TODO
       var launchAi = function (event, node) {
-        console.log('launchAi');
+        if (event.type === 'mouseClicked') {
+          clientManager.pick({id: node.id});
+        }
       };
 
     };
