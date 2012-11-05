@@ -7,7 +7,6 @@ var treasure = require('../../config/data/treasure');
  * Data model `new Data()`
  *
  * @param {Array}
- *
  */
 var Data = function(data) {
   var fields = {};

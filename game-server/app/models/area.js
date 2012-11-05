@@ -15,7 +15,7 @@ var width = 0;
 var height = 0;
 
 var actionManager = null;
-//The map from player to entity
+
 var players = {};
 
 var entities = {};
@@ -29,7 +29,7 @@ var treasureCount = 0;
  * @param {Object} opts
  * @api public
  */
-exp.init = function(opts){
+exp.init = function(opts) {
 	id = opts.id;
   width = opts.width;
   height = opts.height;
@@ -39,13 +39,10 @@ exp.init = function(opts){
 	actionManager = new ActionManager();
   exp.generateTreasures(40);
 
-	run();
+  //area run
+  timer.run();
 };
 
-// area run
-function run() {
-  timer.run();
-}
 
 function addEvent(player) {
   player.on('pickItem', function(args) {

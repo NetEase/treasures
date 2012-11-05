@@ -1,13 +1,9 @@
 var Action = require('./action');
 var util = require('util');
 var area = require('../area');
-//var timer = require('../area/timer');
-//var consts = require('../../consts/consts');
 //var logger = require('pomelo-logger').getLogger(__filename);
 
-/**
- * Move action, which is used to preserve and update user position
- */
+// Move action, which is used to preserve and update user position
 var Move = function(opts) {
 	opts.type = 'move';
 	opts.id = opts.entity.entityId;
