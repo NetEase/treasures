@@ -62,5 +62,3 @@ Entity.prototype.setPos = function(x, y) {
 	this.y = y;
 };
 
-
-
