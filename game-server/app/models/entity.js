@@ -36,8 +36,8 @@ module.exports = Entity;
 // random position
 Entity.prototype.randPos = function() {
   var area = dataApi.area.findById(this.areaId);
-  this.x = utils.rand(20, area.width - 20);
-  this.y = utils.rand(20, area.height - 20);
+  this.x = utils.rand(30, area.width - 30);
+  this.y = utils.rand(30, area.height - 30);
 };
 
 /**

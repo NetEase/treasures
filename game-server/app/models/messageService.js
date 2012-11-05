@@ -3,6 +3,7 @@ var channelService = pomelo.channelService;
 var area = require('./area');
 var EntityType = require('../consts/consts').EntityType;
 
+/*
 var exp = module.exports;
 
 exp.pushMessage = function (msg, cb) {
@@ -18,3 +19,4 @@ exp.pushMessageToPlayer = function (route, msg, cb) {
   exp.pushMessageByUids(msg, uids, cb);
 };
 
+*/

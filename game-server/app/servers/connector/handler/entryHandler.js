@@ -6,12 +6,14 @@ module.exports = function(app) {
 
 var Handler = function(app) {
   this.app = app;
+  this.serverId = app.get('serverId').split('-')[2];
 };
 
 var pro = Handler.prototype;
 
 // generate playerId
 var id = 1;
+ 
 /**
  * New client entry game server. Check token and bind user info into session.
  * 
@@ -22,8 +24,8 @@ var id = 1;
  */
 pro.entry = function(msg, session, next) {
   var self = this;
-  var username = msg.username;
-  var playerId = id++;
+  var playerId = parseInt(this.serverId + id, 10);
+  id += 1;
   session.bind(playerId);
   session.set('playerId', playerId);
   //session.set('playername', msg.name);
@@ -37,6 +39,5 @@ var onUserLeave = function (app, session, reason) {
     return;
   }
   app.rpc.area.playerRemote.playerLeave(session, {playerId: session.playerId, areaId: session.areaId}, null);
-  //app.rpc.chat.chatRemote.kick(session, session.uid, app.get('serverId'), {areaId:session.areaId}, null);
   session.closed();
 };

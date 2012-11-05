@@ -21,10 +21,9 @@ app.configure(function() {
 
 app.configure('production|development', 'area', function(){
   var areaId = app.curserver.areaId;
-  if(!areaId || areaId < 0) {
+  if (!areaId || areaId < 0) {
     throw new Error('load area config failed');
   }
-  // world.init(dataApi.area.all());
   area.init(dataApi.area.findById(areaId));
 });
 

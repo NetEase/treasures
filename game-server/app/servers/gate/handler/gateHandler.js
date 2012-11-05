@@ -14,13 +14,13 @@ var Handler = function(app) {
 
 Handler.prototype.queryEntry = function(msg, session, next) {
 	var uid = msg.uid;
-	if(!uid) {
+	if (!uid) {
 		next(null, {code: Code.FAIL});
 		return;
 	}
 
 	var connectors = this.app.getServersByType('connector');
-	if(!connectors || connectors.length === 0) {
+	if (!connectors || connectors.length === 0) {
 		next(null, {code: Code.GATE.NO_SERVER_AVAILABLE});
 		return;
 	}

@@ -10,13 +10,6 @@ module.exports = {
     ERR_CHANNEL_NOT_EXIST   : -13		// channel not exist
   },
 
-  BornPlace : {
-    x : 1101,
-    y : 902,
-    width : 201,
-    height : 296
-  },
-
   MESSAGE: {
     RES: 200,
     ERR: 500,
@@ -26,13 +19,6 @@ module.exports = {
   EntityType: {
     PLAYER: 'player',
     TREASURE: 'treasure'
-  },
-
-  Pick: {
-    SUCCESS: 1,
-    VANISH:  2,
-    NOT_IN_RANGE: 3, 
-    BAG_FULL: 4
   }
 
 };

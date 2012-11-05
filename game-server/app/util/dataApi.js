@@ -1,6 +1,5 @@
 // require json files
 var area = require('../../config/data/area');
-var character = require('../../config/data/character');
 var role = require('../../config/data/role');
 var treasure = require('../../config/data/treasure');
 
@@ -95,9 +94,6 @@ Data.prototype.all = function() {
 module.exports = {
   area: new Data(area),
   role: new Data(role),
-  character: new Data(character),
   treasure: new Data(treasure)
 };
-
-//Data(talk);
 

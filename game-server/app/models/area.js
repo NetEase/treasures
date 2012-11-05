@@ -1,11 +1,8 @@
 var EventEmitter = require('events').EventEmitter;
 var dataApi = require('../util/dataApi');
-//var Map = require('./../map/map');
 var pomelo = require('pomelo');
 var channelService = pomelo.channelService;
 var ActionManager = require('./action/actionManager');
-//var Queue = require('pomelo-collection').queue;
-//var eventManager = require('./../event/eventManager');
 var timer = require('./timer');
 var EntityType = require('../consts/consts').EntityType;
 var logger = require('pomelo-logger').getLogger(__filename);
@@ -54,7 +51,6 @@ function addEvent(player) {
   player.on('pickItem', function(args) {
     var player = exp.getEntity(args.entityId);
     player.target = null;
-    console.log(player);
     player.treasureCount++;
     exp.removeEntity(args.target);
     channel.pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, treasureCount: player.treasureCount});
@@ -226,9 +222,5 @@ exp.actionManager = function() {
 
 exp.timer = function() {
 	return timer;
-};
-
-exp.getDistance = function(pos1, pos2) {
-	return Math.sqrt(Math.pow((pos1.x - pos2.x), 2) + Math.pow((pos1.y - pos2.y), 2));
 };
 

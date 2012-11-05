@@ -26,8 +26,9 @@ Move.prototype.update = function() {
   var speed = this.entity.walkSpeed;
   var moveLength = speed * time / 1000;
   var dis = getDis(this.entity.getPos(), this.endPos);
-  if (dis < moveLength) {
+  if (dis <= moveLength / 2) {
     this.finished = true;
+    this.entity.setPos(this.endPos.x, this.endPos.y);
     return;
   } else if (dis < 55 && this.entity.target) {
     this.entity.emit('pickItem', {entityId: this.entity.entityId, target: this.entity.target});
@@ -48,8 +49,8 @@ function getPos(start, end, moveLength, dis) {
   }
   var pos = {};
 
-  pos.x = Math.round(start.x + (end.x - start.x) * (moveLength / dis));
-  pos.y = Math.round(start.y + (end.y - start.y) * (moveLength / dis));
+  pos.x = start.x + (end.x - start.x) * (moveLength / dis);
+  pos.y = start.y + (end.y - start.y) * (moveLength / dis);
 
   return pos;
 }

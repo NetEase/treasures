@@ -14,26 +14,8 @@ function Treasure(opts) {
   Entity.call(this, opts);
   this.type = EntityType.TREASURE;
   this.imgId = opts.imgId;
-  
-  this.died = false;
 }
 
 util.inherits(Treasure, Entity);
 
 module.exports = Treasure;
-
-/**
- * Treasure refresh every 'lifetime' millisecond
- *
- * @api public
- */
-Treasure.prototype.update = function() {
-	var next = Date.now();
-	
-	this.lifetime -= (next - this.time);
-	this.time = next;
-	if (this.lifetime <= 0) {
-		this.died = true;
-  }
-};
-

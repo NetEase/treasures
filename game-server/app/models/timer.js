@@ -4,19 +4,14 @@ var logger = require('pomelo-logger').getLogger(__filename);
 
 var exp = module.exports;
 
-exp.run = function (){
+exp.run = function() {
   setInterval(tick, 100);
 };
 
-function tick(){
-
+function tick() {
   //run all the action
   area.actionManager().update();
   area.entityUpdate();
-
-  // area.aiManager().update();
-
-  // area.patrolManager().update();
 }
 
 /**
@@ -24,7 +19,7 @@ function tick(){
  * @param action {Object} The action need to add
  * @return {Boolean}
  */
-exp.addAction = function(action){
+exp.addAction = function(action) {
   return area.actionManager().addAction(action);
 };
 
@@ -33,7 +28,7 @@ exp.addAction = function(action){
  * @param type {Number} The type of the action
  * @param id {Id} The id of the action
  */
-exp.abortAction = function(type, id){
+exp.abortAction = function(type, id) {
   return area.actionManager().abortAction(type, id);
 };
 
@@ -41,17 +36,6 @@ exp.abortAction = function(type, id){
  * Abort all action for a given id in area
  * @param id {Number} 
  */
-exp.abortAllAction = function(id){
+exp.abortAllAction = function(id) {
   area.actionManager().abortAllAction(id);
-};
-
-/**
- * Update object for aoi
- * @param obj {Object} Given object need to update.
- * @param oldPos {Object} Old position.
- * @param newPos {Object} New position.
- * @return {Boolean} If the update success.
- */
-exp.updateObject = function(obj, oldPos, newPos) {
-  return area.aoi().updateObject(obj, oldPos, newPos);
 };

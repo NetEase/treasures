@@ -1,10 +1,7 @@
 // Module dependencies
 var area = require('../../../models/area');
 var Player = require('../../../models/player')
-//var messageService = require('../../../domain/messageService');
-//var world = require('../../../domain/world');
 var Move = require('../../../models/action/move');
-//var actionManager = require('../../../domain/action/actionManager');
 var channelService = require('pomelo').channelService;
 var logger = require('pomelo-logger').getLogger(__filename);
 var app = require('pomelo').app;
@@ -121,32 +118,5 @@ handler.move = function(msg, session, next) {
     });
     area.channel().pushMessage({route: 'onMove', entityId: player.entityId, endPos: endPos});
   }
-};
-
-
-/**
- * Player pick up item. 
- * Handle the request from client, and set player's target
- * 
- * @param {Object} msg
- * @param {Object} session
- * @param {Function} next
- * @api public
- */
-handler.pickItem = function(msg, session, next) {
-  var player = area.getPlayer(session.playerId);
-  var target = area.getEntity(msg.targetId);
-  if (!player || !target ||  target.type !== consts.EntityType.TREASURE) {
-    logger.error("can't find player or target! areaId : %j, playerId : %j, targetId : %j", session.areaId, session.playerId, msg.targetId);
-    next(new Error('invalid player or target'), {
-      code: consts.MESSAGE.ERR
-    });
-    return;
-  }
-
-  player.target = target.entityId;
-  next(null, {
-    code: consts.MESSAGE.RES
-  });
 };
 
