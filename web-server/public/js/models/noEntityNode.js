@@ -2,12 +2,6 @@ __resources__["/noEntityNode.js"] = {meta: {mimetype: "application/javascript"},
   /**
    * Module dependencies.
    */
-  var pomelo = window.pomelo;
-  var app = require('app');
-  var imgAndJsonUrl = require('config').IMAGE_URL;
-  var Node = require('node').Node;
-  var helper = require('helper');
-  var animate = require('animate');
   var model = require('model');
   var EntityType = require('consts').EntityType;
 
@@ -49,42 +43,6 @@ __resources__["/noEntityNode.js"] = {meta: {mimetype: "application/javascript"},
       model: nameModel
     });
     return nameNode;
-  }
-
-  /**
-   * Create bloodbarNodes, which contain redBar and darkBar
-   *
-   * @param {Object} data
-   * @return {Object}
-   * @api public
-   */
-  NoEntityNode.createBloodbarNodes = function(data) {
-    var ResMgr = app.getResMgr();
-    var redImg = ResMgr.loadImage(imgAndJsonUrl+'number/bloodbar.png');
-    var darkImg = ResMgr.loadImage(imgAndJsonUrl+'number/bloodbar_bk.png');
-    var redModel = new model.RectModel({
-      x: 0,
-      y: 0,
-      width: 45,
-      height: 6,
-      fill: 'rgb(255,0,0)',
-      stroke:'rgb(255,0,0)'
-     });
-     var darkModel = new model.RectModel({
-      x: 0,
-      y: 0,
-      width: 45,
-      height: 6,
-      fill: 'rgb(0,0,0)',
-      stroke:'rgb(0,0,0)'
-     });
-     var redBloodBarNode = data.scene.createNode({
-       model: redModel
-     });
-     var darkBloodBarNode = data.scene.createNode({
-       model: darkModel
-     });
-     return {redBloodBarNode: redBloodBarNode, darkBloodBarNode: darkBloodBarNode};
   };
 
 }};

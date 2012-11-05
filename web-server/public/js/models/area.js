@@ -24,7 +24,7 @@ __resources__["/area.js"] = {
       };
     })();
 
-    function Area(opts, mapData) {
+    function Area(opts) {
       this.id = opts.id || 1;
       this.playerId = opts.playerId;
       this.entities = {};
@@ -37,7 +37,6 @@ __resources__["/area.js"] = {
       this.gd = opts.gd;
       this.gv = opts.gv;
 
-      // this.mapData = mapData;
       this.isStopped = false;
       this.init(opts);
     }
@@ -62,8 +61,7 @@ __resources__["/area.js"] = {
 
       var width = parseInt(getComputedStyle(document.getElementById("game")).width);
       var height = parseInt(getComputedStyle(document.getElementById("game")).height);
-      // pomelo.notify({route: 'area.playerHandler.changeView', width: width, height: height});
-
+      
       this.componentAdder.addComponent();
     };
 
@@ -200,8 +198,6 @@ __resources__["/area.js"] = {
       var skch = this.skch;
       var logicObj = new logic.Logic();
       this.scene = logicObj.getScene();
-
-      //未加载的图片不显示
 
       this.gLevel = new Level({
         logic: logicObj

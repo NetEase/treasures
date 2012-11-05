@@ -4,7 +4,6 @@ __resources__["/componentAdder.js"] = {
 
     var MouseButtonEventComponent = require('component').MouseButtonEventComponent;
     var clientManager = require('clientManager');
-    var HoverEventComponent = require('component').HoverEventComponent;
     /**
      * add component to entity, such as mouseButtonEventComponent
      */
@@ -36,19 +35,6 @@ __resources__["/componentAdder.js"] = {
         if (event.type === 'mousePressed'){
           var endX = event.mouseX - sprite.getMapPosition().x;
           var endY = event.mouseY - sprite.getMapPosition().y;
-          /*
-          var startX = sprite.getPosition().x;
-          var startY = sprite.getPosition().y;
-          var moveMessage = {
-            startX: startX,
-            startY: startY,
-            endX: endX,
-            endY: endY,
-            playerId: player.id,
-            areaId: area.id,
-            speed: sprite.entity.walkSpeed
-          };
-          */
           clientManager.move({x: endX, y: endY});
         }
       };
@@ -62,15 +48,14 @@ __resources__["/componentAdder.js"] = {
         var clickComponentEntity = new MouseButtonEventComponent({
           pipe: area.gLevel.sysPipe(),
           decider: area.scene.queryDecider('mouseButtonDecider'),
-          callback: launchAi
+          callback: eventAction
         });
         var node = entity.getSprite().curNode;
         node.addComponent('mouseButtonEventComponent', clickComponentEntity);
-        //add HoverEventComponent to entities
       };
 
-      //TODO
-      var launchAi = function (event, node) {
+
+      var eventAction = function (event, node) {
         if (event.type === 'mouseClicked') {
           clientManager.pick({id: node.id});
         }

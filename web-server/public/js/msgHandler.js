@@ -4,14 +4,8 @@ __resources__["/msgHandler.js"] = {
 
     var pomelo = window.pomelo;
     var app = require('app');
-    //var dataApi = require('dataApi');
-    var Border = require('consts').Border;
-    //var noEntityNode = require('noEntityNode');
     var EntityType = require('consts').EntityType;
-    var NodeCoordinate = require('consts').NodeCoordinate;
-    var utils = require('utils');
-    var clientManager = require('clientManager');
-
+    
     exports.init = init;
 
     function init() {
@@ -56,19 +50,7 @@ __resources__["/msgHandler.js"] = {
 
         var sprite = entity.getSprite();
         var sPos = sprite.getPosition();
-        //var totalDistance = utils.totalDistance(path);
-        //var needTime = Math.floor(totalDistance / sprite.getSpeed() * 1000 - app.getDelayTime());
-        //var speed = totalDistance/needTime * 1000;
         sprite.movePath([sPos, data.endPos]);
-      });
-
-      // Handle player drop items message
-      pomelo.on('onDropItems', function(data) {
-        var items = data.dropItems;
-        var area = app.getCurArea();
-        for (var i = 0; i < items.length; i ++) {
-          area.addEntity(items[i]);
-        }
       });
 
       // Handle remove item message
@@ -105,31 +87,6 @@ __resources__["/msgHandler.js"] = {
         area.removePlayer(playerId);
       });
 
-    }
-
-    /**
-     * the action invokes when the result is success
-     * @param {Object} data
-     */
-    var successAction = function(data) {
-      new skillEffect(data.skillEffectParams).createEffectAni();
-      var attackerSprite = data.attackerSprite;
-      var attackerPos = data.attackerPos;
-      data.attackerSprite.translateTo(data.attackerPos.x, data.attackerPos.y);
-      data.attackerSprite.attack({x1: data.attackerPos.x, y1: data.attackerPos.y, x2: data.targetPos.x, y2: data.targetPos.y});
-      data.target.update({damage: data.resultData.damage});
-      data.attacker.update({mpUse: data.resultData.mpUse});
-      data.targetSprite.reduceBlood();
-      data.targetSprite.createNumberNodes(data.resultData.damage);
-    };
-
-    var uiUpdate = function() {
-      var player = app.getCurPlayer();
-      player.emit('change:hp');
-      player.emit('change:maxHp');
-      player.emit('change:mp');
-      player.emit('change:maxMp');
-      player.emit('change:experience');
     };
   }
 };

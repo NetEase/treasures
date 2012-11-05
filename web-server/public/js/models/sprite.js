@@ -19,7 +19,6 @@ __resources__["/sprite.js"] = {
     var utils = require('utils');
     var dataApi = require('dataApi');
     var noEntityNode = require('noEntityNode');
-    //var mainPanel = require('mainPanelView');
     var animation = require('animation');
 
     var app = require('app');
@@ -38,8 +37,6 @@ __resources__["/sprite.js"] = {
       this.bloodbarNode = null;
 
       this.moveAnimation = null;
-      this.attackAnimation = null;
-      this.diedAnimation = null;
       this.standAnimation = null;
       this.standFrameLoop = null;
       this.walkAnimation = null;
@@ -58,9 +55,9 @@ __resources__["/sprite.js"] = {
       var name = aniName.LEFT_STAND, startAin = 'Stand';
       var npcName = aniOrientation.LEFT;
       var type = this.entity.type;
-      if (type === EntityType.PLAYER || type === EntityType.MOB) {
+      if (type === EntityType.PLAYER) {
         this._initDynamictNode(aniOrientation.LEFT+startAin);
-      } else if (type === EntityType.ITEM || type === EntityType.TREASURE) {
+      } else if (type === EntityType.TREASURE) {
         this._initStaticNode();
       }
     };
@@ -123,33 +120,15 @@ __resources__["/sprite.js"] = {
       this.curNode = frameNode;
       this.nameNode = noEntityNode.createNameNode(this.entity);
       this.entity.scene.addNode(this.nameNode, frameNode);
-      if (this.entity.type === EntityType.PLAYER || this.entity.type === EntityType.MOB) {
-        /*
-        var bloodbarNodes = noEntityNode.createBloodbarNodes({scene: this.entity.scene});
-        this.bloodbarNode = bloodbarNodes.redBloodBarNode;
-        var darkBloodBarNode = bloodbarNodes.darkBloodBarNode;
-        this.entity.scene.addNode(this.bloodbarNode, frameNode);
-        this.entity.scene.addNode(darkBloodBarNode, frameNode);
-        var json = new animation({
-          kindId: this.entity.kindId,
-          type: this.entity.type,
-          name: name
-        }).getJsonData();
-        var width = json.width - 30;
-        var height = json.height + 10;
-        this.bloodbarNode.exec('translate', -26, -height, NodeCoordinate.RED_BLOOD_NODE);
-        darkBloodBarNode.exec('translate', -26, -height, NodeCoordinate.BLACK_BLOOD_NODE);
-        */
+      if (this.entity.type === EntityType.PLAYER) {
         this.nameNode.exec('translate', 0 , -120, NodeCoordinate.NAME_NODE);
-        //this.reduceBlood();
       }
       this._initStand();
     };
 
     //Update entity' name.
-    Sprite.prototype.updateName = function(name) {
-      // var name = this.entity.name + '-' + this.entity.level;
-      this.nameNode.model().text = name;
+    Sprite.prototype.updateName = function(text) {
+      this.nameNode.model().text = text;
     };
 
     /**
@@ -205,36 +184,12 @@ __resources__["/sprite.js"] = {
         actionAnimation.onFrameEnd = function(t, dt) {
           if (self.curNode && actionAnimation.isDone()) {
             callback();
-            //if (!!pool) {
-              //pool.returnObject(actionAnimation);
-              actionAnimation = null;
-            //}
+            actionAnimation = null;
           }
         }
         this.curNode.exec('addAnimation', actionAnimation);
         return actionAnimation;
       }
-    };
-
-    //Get animation from objectPool.
-    Sprite.prototype.getAnimationFromPool = function(kindId, name, flipX) {
-      var returnObject;
-      // var poolName = utils.getPoolName(kindId, name, flipX);
-      // var pool = app.getObjectPoolManager().getPool(poolName);
-      if (!pool) {
-        new objectPoolFactory().createPools(kindId, this.entity.type);
-        pool = app.getObjectPoolManager().getPool(poolName);
-      }
-      returnObject = pool.getObject();
-      if (!returnObject) {
-        returnObject = new animation({
-          kindId: this.entity.kindId,
-          type: this.entity.type,
-          name: name,
-          flipx: flipX
-        }).create();
-      }
-      return returnObject;
     };
 
     //Walk animation, one of four basic animations.
@@ -250,7 +205,7 @@ __resources__["/sprite.js"] = {
       if (!this.curNode || !this.walkAnimation || !this.walkFrameLoop) {
         return;
       }
-      // this.returnAnimation(this.walkAnimation);
+
       this.removeAnimation(this.walkAnimation);
       this.removeAnimation(this.walkFrameLoop);
       this.walkAnimation = null;
@@ -275,23 +230,11 @@ __resources__["/sprite.js"] = {
       if (!this.curNode || !this.standAnimation || !this.standFrameLoop) {
         return;
       }
-      // this.returnAnimation(this.standAnimation);
+
       this.removeAnimation(this.standAnimation);
       this.removeAnimation(this.standFrameLoop);
       this.standAnimation = null;
       this.standFrameLoop = null;
-    };
-
-    //Return animation to pool
-    Sprite.prototype.returnAnimation = function(animation) {
-      if (!!animation) {
-        animation.prepare();
-        var poolName = utils.getPoolName(this.entity.kindId, animation.name, animation.flipx);
-        var pool = app.getObjectPoolManager().getPool(poolName);
-        if (!!pool) {
-          pool.returnObject(animation);
-        }
-      }
     };
 
     /**
@@ -303,121 +246,6 @@ __resources__["/sprite.js"] = {
     Sprite.prototype.stopWholeAnimations = function() {
       this.stopMove();
       this.stopStand();
-      this.stopAttack();
-    };
-
-    //Attack animation, a basic animaiton
-    Sprite.prototype.attack = function(dir, killFlag) {
-      this.stopWholeAnimations();
-      var self = this;
-      var result = this._action(dir, 'ATTACK', function() {
-        if (self.entity.type === EntityType.PLAYER && killFlag === 'killed') {
-          //self._initStand(dir);
-          self.stand(dir);
-        }
-      });
-      this.attackAnimation = result.actionAnimation;
-    };
-
-    //Update the bloodbarNode state
-    Sprite.prototype.reduceBlood = function() {
-      var curHp = this.entity.hp;
-      var maxHp = this.entity.maxHp;
-      var sx = curHp / maxHp;
-      if (sx < 0) {
-        sx = 0;
-      }
-      this.bloodbarNode.exec('scale', {x: sx, y: 1});
-    };
-
-    //When the entity died, which blood become zero
-    Sprite.prototype.zeroBlood = function() {
-      this.bloodbarNode.exec('scale', {x: 0, y: 1});
-    };
-
-    /**
-     * Player upgrade animation. It is parallelAnimation.
-     *
-     * @api public
-     */
-    Sprite.prototype.upgrade = function() {
-      this.nameNode.model().text = this.entity.name + ' - ' + this.entity.level;
-      var text = '升级啦！';
-      var gradeModel = new model.TextModel({
-        text: text,
-        fill: 'rgb(255,0,0)',
-        height: 20,
-        font: 'Arial Bold'
-      });
-      gradeModel.set('ratioAnchorPoint', {
-        x: 0.5,
-        y: 0.5
-      });
-      var gradeNode = this.entity.scene.createNode({
-        model: gradeModel
-      });
-      var scaleAni = new animate.ScaleTo(
-        [0, {x: 1, y: 1}, 'linear'],
-        [1000, {x: 2, y: 2}, 'sine'],
-        [2000, {x: 3, y: 3},'linear'],
-        [3000, {x: 4, y: 4}, 'sine'],
-        [4000, {x: 2, y: 2}]
-      ); 
-      var rotAni = new animate.RotateTo(
-        [0, 0, 'sine'],
-        [2000, 2.0 * Math.PI, 'sine'],
-        [4000, 0 * Math.PI]
-      );
-      var paraAni = new animate.ParallelAnimation({
-        animations: [scaleAni, rotAni] 
-      });
-      gradeNode.exec('addAnimation', paraAni);
-      this.entity.scene.addNode(gradeNode, this.curNode);
-      gradeNode.exec('translate', 0, -80, NodeCoordinate.UPDATE_NODE);
-      this.bloodbarNode.exec('scale', {x: 1, y: 1});
-      var self = this;
-      setTimeout(function() {
-        self.curNode.removeChild(gradeNode);
-        self.stand();
-      }, 5000);
-    };
-
-    //Stop attackAnimation
-    Sprite.prototype.stopAttack = function() {
-      if (!this.curNode || !this.attackAnimation) {
-        return;
-      }
-      // this.returnAnimation(this.attackAnimation);
-      this.removeAnimation(this.attackAnimation);
-      this.attackAnimation = null;
-    };
-
-    /**
-     * Died animation, a basic animaiton.
-     * If player, update it's position and destory
-     *
-     * @param {Object} dir  direction which has two point, point1 adn point2
-     * @api public
-     */
-    Sprite.prototype.died = function(dir) {
-      if (this.entity.entityId === app.getCurPlayer().entityId) {
-        console.log('curPlayer died');
-      }
-      this.stopWholeAnimations();
-      var self = this;
-      // mask show
-      if (self.entity.entityId === app.getCurPlayer().entityId) {
-        mainPanel.reviveMaskShow();
-      }
-      var result = this._action(dir, 'DIE', function() {
-        if (self.entity.type === EntityType.PLAYER) {
-          var pos = self.getPosition();
-          self.entity.x = pos.x;
-          self.entity.y = pos.y;
-        } 
-        self.destory();
-      });
-      this.diedAnimation = result.actionAnimation;
     };
 
     /**
@@ -508,20 +336,6 @@ __resources__["/sprite.js"] = {
       });
     };
 
-    /**
-      Sprite.prototype.move = function(sx, sy, ex, ey) {
-      if(!this.curNode) {
-      return;
-      }
-
-      this.clearPath();
-
-      var distance = utils.distance(sx, sy, ex, ey);
-      var time = distance / this.getSpeed() * 1000;
-      this._move(sx, sy, ex, ey, time);
-      };
-      */
-
     Sprite.prototype._move = function(sx, sy, ex, ey, time, cb) {
       this.stopMove();
       this.moveAnimation = new animate.MoveTo(
@@ -550,10 +364,6 @@ __resources__["/sprite.js"] = {
       return (!!this.moveAnimation) && (!this.moveAnimation.isDone());
     };
 
-    Sprite.prototype.isAttack = function() {
-      return (!!this.attackAnimation) && (!this.attackAnimation.isDone());
-    };
-
     //remove the animation of the curNode
     Sprite.prototype.removeAnimation = function(animation) {
       if (animation) {
@@ -572,67 +382,6 @@ __resources__["/sprite.js"] = {
       this.stopWalk();
     };
 
-    /**
-     * Number animation. Create numberNode by the damage, move and remove those nodes.
-     *
-     * @param {String/Number} damage
-     * @api public
-     */
-    Sprite.prototype.createNumberNodes = function(damage) {
-      var length = (damage + '').length;
-      damage = parseInt(damage, 10);
-      var number = [];
-      while(damage !== 0) {
-        number.push(damage%10);
-        damage = Math.floor(damage/10);
-      }
-      var numberNodes = [];
-      var ResMgr = app.getResMgr();
-      for (var i = number.length-1; i>=0; i--) {
-        var img = ResMgr.loadImage(imgAndJsonUrl + 'number/number_'+number[i]+'.png');
-        var numberModel = new model.ImageModel({
-          image: img
-        });
-        var numberNode = this.entity.scene.createNode({
-          model: numberModel
-        });
-        numberNodes.push(numberNode);
-      }
-      var flagImg = ResMgr.loadImage(imgAndJsonUrl+ 'number/number_minus.png');
-      var flagModel = new model.ImageModel({
-        image: flagImg
-      });
-      var flagNode = this.entity.scene.createNode({
-        model:flagModel
-      });
-      var x = -50;
-      var y = -(this.curNode.model()._h + 50);
-      this.entity.scene.addNode(flagNode, this.curNode);
-      flagNode.exec('translate', x, y, NodeCoordinate.NUMBER_NODE);
-      this.numberMoveTo(flagNode, x, y);
-      for (var j = 0; j< numberNodes.length; j++) {
-        x += 20 ;
-        this.entity.scene.addNode(numberNodes[j], this.curNode);
-        numberNodes[j].exec('translate', x, y , NodeCoordinate.NUMBER_NODE);
-        this.numberMoveTo(numberNodes[j], x, y);
-      }
-    };
-
-    //Number nodes moveAnimation
-    Sprite.prototype.numberMoveTo = function(node, x, y) {
-      var randomDist = 10;
-      var ma = new animate.MoveTo(
-        [0, {x: x, y: y}, 'linear'],
-        [350, {x: x + randomDist, y: y - randomDist}, 'linear']
-      );
-      var self = this;
-      ma.onFrameEnd = function(t, dt) {
-        if (self.curNode && ma.isDone()) {
-          self.curNode.removeChild(node);
-        }
-      };
-      node.exec('addAnimation', ma);
-    };
 
     // Get sprite position
     Sprite.prototype.getPosition = function() {
@@ -672,20 +421,6 @@ __resources__["/sprite.js"] = {
           this.curNode = null;
         }
       }
-    };
-
-    /**
-     * Revive entity, add it's node to mapNode, recover it' animation
-     *
-     * @param {Object} data revive position
-     * @api public
-     */
-
-    Sprite.prototype.revive = function(data) {
-      this.entity.scene.addNode(this.curNode, this.mapNode);
-      this.reduceBlood();
-      this.translateTo(data.x, data.y);
-      this.stand();
     };
 
     //Check out the curPlayer

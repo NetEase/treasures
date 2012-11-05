@@ -59,14 +59,8 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
    */
   Animation.prototype.getJsonData= function() {
     var id = this.kindId, type = this.type, name = this.name, data;
-    if (type === EntityType.PLAYER || type === EntityType.MOB) {
+    if (type === EntityType.PLAYER) {
       data = dataApi.animation.get(id)[name];
-    } else if (type === EntityType.NPC) {
-      data = {
-        width: 250,
-        height: 100,
-        totalFrames:1
-      };
     }
     if (data) {
       return data;
@@ -83,14 +77,8 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
   Animation.prototype.getImage = function() {
     var id = this.kindId, type = this.type, name = this.name;
     var aniIamgeUrl;
-    if (type === EntityType.PLAYER || type === EntityType.MOB) {
+    if (type === EntityType.PLAYER) {
       aniIamgeUrl = imgAndJsonUrl+'animation/character/'+id+'/'+name+'.png';
-    } else if(type === EntityType.NPC) {
-      if (name === aniOrientation.LEFT) {
-        aniIamgeUrl = imgAndJsonUrl+'npc/'+id+'/stand/frame_0.png';
-      } else {
-        aniIamgeUrl = imgAndJsonUrl+'npc/'+id+'/stand/frame_15.png';
-      }
     }
     var ResMgr = app.getResMgr();
     var img = ResMgr.loadImage(aniIamgeUrl);

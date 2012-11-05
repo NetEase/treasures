@@ -7,20 +7,16 @@ __resources__["/dataApi.js"] = {
     
     // animation data
     function AnimationData() {
+      this.data = {};
     }
 
     AnimationData.prototype.set = function(data) {
-      data || (data = {});
-      for (var k in data) {
-        localStorage.setItem('ani_' + k, JSON.stringify(data[k]));
-      }
+      this.data = data;
     };
 
     AnimationData.prototype.get = function(id) {
-      return JSON.parse(localStorage.getItem('ani_' + id)) || {};
+      return this.data[id]
     };
-
-
    
     exports.animation = new AnimationData();
 

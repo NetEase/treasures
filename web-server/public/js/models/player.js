@@ -3,7 +3,6 @@ __resources__["/player.js"] = {
   data: function(exports, require, module, __filename, __dirname) {
 
     var Entity = require('entity');
-    var aniName = require('consts').AnimationName;
 
     /**
      * Initialize a new 'Character' with the given 'opts'.
@@ -20,8 +19,6 @@ __resources__["/player.js"] = {
       this.treasureCount = opts.treasureCount || 0;
       this.target = null;
 
-      //status
-      // this.died = false;
       Entity.call(this, opts);
     }
 

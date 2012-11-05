@@ -22,27 +22,6 @@ __resources__["/utils.js"] = {meta: {mimetype: "application/javascript"}, data: 
     return distance;
   };
 
-  /**
-   * amend the path of addressing
-   * @param {Object} path   the path of addressing
-   * @return {Object} path the path modified
-   */
-  module.exports.pathAmend = function(sprite, path) {
-    var position = sprite.getPosition();
-    path[0] = {
-      x: position.x,
-      y: position.y
-    };
-    if (path.length > 2) {
-      path.splice(1, 1);
-    }
-    return path;
-  };
-
-  module.exports.getPoolName = function(kindId, name, flipx) {
-    return kindId + '_' + name + '_' + flipx;
-  };
-
   module.exports.invokeCallback = function(cb) {
     if(cb && typeof cb === 'function') {
       cb.apply(null, Array.prototype.slice.call(arguments, 1));

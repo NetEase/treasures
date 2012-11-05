@@ -5,7 +5,6 @@ __resources__["/clientManager.js"] = {
 		var pomelo = window.pomelo;
 		var app = require('app');
 		var EntityType = require('consts').EntityType;
-		//var utils = require('utils');
 
     function move(targetPos) {
       pomelo.request('area.playerHandler.move', {targetPos: targetPos}, function(result) {
@@ -24,7 +23,6 @@ __resources__["/clientManager.js"] = {
       var entity = app.getCurArea().getEntity(targetId);
      
       if (entity.type === EntityType.TREASURE) {
-        // pomelo.notify('area.playerHandler.pickItem', {targetId: targetId});
         pomelo.notify('area.playerHandler.move', {targetPos: {x: entity.x, y: entity.y}, target: targetId});
       }
     }
