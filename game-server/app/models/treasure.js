@@ -14,6 +14,7 @@ function Treasure(opts) {
   Entity.call(this, opts);
   this.type = EntityType.TREASURE;
   this.imgId = opts.imgId;
+  this.score = parseInt(opts.heroLevel, 10);
 }
 
 util.inherits(Treasure, Entity);

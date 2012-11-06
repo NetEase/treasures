@@ -64,6 +64,7 @@ __resources__["/msgHandler.js"] = {
         var player = area.getEntity(data.entityId);
         var item = area.getEntity(data.target);
         player.treasureCount = data.treasureCount;
+        player.getSprite().scoreFly();
         player.getSprite().updateName(player.name + ' - ' + player.treasureCount);
         area.removeEntity(item.entityId);
       });

@@ -16,24 +16,24 @@ __resources__["/noEntityNode.js"] = {meta: {mimetype: "application/javascript"},
   NoEntityNode.createNameNode = function(data) {
     var name;
     var font = 'Arial Bold';
-    fill = 'rgb(255,0,0)';
+    var fill = 'rgb(255,10,10)';
     switch(data.type) {
       case EntityType.PLAYER: 
         name = data.name + ' - ' + data.treasureCount;
         break;
       case EntityType.TREASURE:
         name = data.kindName;
-        font = '';
+        font = 'Arial';
         break;
       default:
         name = data.name;
-        font = '';
+        font = 'Arial';
     }
     var nameModel = new model.TextModel({
       text: name,
       fill: fill, 
       font: font, 
-      height: 14
+      height: '14px'
     });
     nameModel.set('ratioAnchorPoint', {
       x: 0.5,

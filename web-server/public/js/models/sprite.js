@@ -131,6 +131,29 @@ __resources__["/sprite.js"] = {
       this.nameNode.model().text = text;
     };
 
+    Sprite.prototype.scoreFly = function() {
+      var scoreNode = noEntityNode.createNameNode({name: '+10', scene: this.entity.scene})
+      this.entity.scene.addNode(scoreNode, this.curNode);
+      scoreNode.exec('translate', 25, -70, 10);
+      this.numberMoveTo(scoreNode, 25, -70);
+    };
+
+    //Number nodes moveAnimation
+    Sprite.prototype.numberMoveTo = function(node, x, y) {
+      //var randomDist = 20;
+      var ma = new animate.MoveTo(
+        [0, {x: x, y: y}, 'linear'],
+        [350, {x: 15 + x, y: y - 25}, 'linear']
+      );
+      var self = this;
+      ma.onFrameEnd = function(t, dt) {
+        if (self.curNode && ma.isDone()) {
+          self.curNode.removeChild(node);
+        }
+      };
+      node.exec('addAnimation', ma);
+    };
+
     /**
      * Action makes up animation.
      * 
