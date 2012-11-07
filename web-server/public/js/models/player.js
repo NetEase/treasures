@@ -5,8 +5,8 @@ __resources__["/player.js"] = {
     var Entity = require('entity');
 
     /**
-     * Initialize a new 'Character' with the given 'opts'.
-     * Character inherits Entity 
+     * Initialize a new 'Player' with the given 'opts'.
+     * Player inherits Entity 
      *
      * @param {Object} opts
      * @api public
@@ -16,15 +16,15 @@ __resources__["/player.js"] = {
       this.id = opts.id;
       this.type = 'player';
       this.name = opts.name;
-      this.treasureCount = opts.treasureCount || 0;
+      this.score = opts.score || 0;
       this.target = null;
 
       Entity.call(this, opts);
     }
 
     Player.prototype = Object.create(Entity.prototype);
-    module.exports = Player;
 
+    module.exports = Player;
   }
 };
 

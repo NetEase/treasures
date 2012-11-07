@@ -63,10 +63,24 @@ __resources__["/msgHandler.js"] = {
         var area = app.getCurArea();
         var player = area.getEntity(data.entityId);
         var item = area.getEntity(data.target);
-        player.treasureCount = data.treasureCount;
-        player.getSprite().scoreFly();
-        player.getSprite().updateName(player.name + ' - ' + player.treasureCount);
+        player.set('score', player.score + data.score);
+        player.getSprite().scoreFly(data.score);
+        player.getSprite().updateName(player.name + ' - ' + player.score);
         area.removeEntity(item.entityId);
+      });
+
+      pomelo.on('rankUpdate', function(data) {
+        //console.log(data);
+        var ul = document.querySelector('#rank ul');
+        var area = app.getCurArea();
+        var li = "";
+        data.entities.forEach(function(id) {
+          var e = area.getEntity(id);
+          if (e) {
+            li += '<li><span>' + e.name + '</span><span>' + e.score + '</span></li>';  
+          }
+        });
+        ul.innerHTML = li;
       });
 
       // Handle kick out messge, occours when the current player is kicked out

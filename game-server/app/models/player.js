@@ -19,13 +19,17 @@ function Player(opts) {
 	this.type = EntityType.PLAYER;
 	this.name = opts.name;
   this.walkSpeed = 240;
-  this.treasureCount = opts.treasureCount || 0;
+  this.score = opts.score || 0;
   this.target = null;
 }
 
 util.inherits(Player, Entity);
 
 module.exports = Player;
+
+Player.prototype.addScore = function (score) {
+  this.score += score;
+};
 
 /**
  * Parse String to json.
@@ -45,7 +49,8 @@ Player.prototype.toJSON = function() {
     x: this.x,
     y: this.y,
 		walkSpeed: this.walkSpeed,
-		areaId: this.areaId
+		areaId: this.areaId,
+    score: this.score
   };
 };
 

@@ -15,6 +15,7 @@ __resources__["/treasure.js"] = {
       this.type = 'treasure';
       this.name = opts.name;
       this.imgId = opts.imgId;
+      this.score = opts.score || 0;
       Entity.call(this, opts);
     }
 

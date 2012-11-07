@@ -93,7 +93,7 @@ __resources__["/sprite.js"] = {
       this.entity.scene.addNode(staticNode, this.mapNode);
       staticNode.exec('translate', x, y, NodeCoordinate.NPC_NODE);
       var nameNode = noEntityNode.createNameNode(this.entity);
-      nameNode.exec('translate', 0, -50, NodeCoordinate.NPC_NODE);
+      nameNode.exec('translate', -30, -70, NodeCoordinate.NPC_NODE);
       this.entity.scene.addNode(nameNode, staticNode);
       this.curNode = staticNode;
     };
@@ -121,7 +121,7 @@ __resources__["/sprite.js"] = {
       this.nameNode = noEntityNode.createNameNode(this.entity);
       this.entity.scene.addNode(this.nameNode, frameNode);
       if (this.entity.type === EntityType.PLAYER) {
-        this.nameNode.exec('translate', 0 , -120, NodeCoordinate.NAME_NODE);
+        this.nameNode.exec('translate', -30, -120, NodeCoordinate.NAME_NODE);
       }
       this._initStand();
     };
@@ -131,11 +131,11 @@ __resources__["/sprite.js"] = {
       this.nameNode.model().text = text;
     };
 
-    Sprite.prototype.scoreFly = function() {
-      var scoreNode = noEntityNode.createNameNode({name: '+10', scene: this.entity.scene})
+    Sprite.prototype.scoreFly = function(score) {
+      var scoreNode = noEntityNode.createNameNode({name: '+' + score, scene: this.entity.scene})
       this.entity.scene.addNode(scoreNode, this.curNode);
-      scoreNode.exec('translate', 25, -70, 10);
-      this.numberMoveTo(scoreNode, 25, -70);
+      scoreNode.exec('translate', 0, -100, NodeCoordinate.NAME_NODE + 1);
+      this.numberMoveTo(scoreNode, 0, -100);
     };
 
     //Number nodes moveAnimation
@@ -143,7 +143,7 @@ __resources__["/sprite.js"] = {
       //var randomDist = 20;
       var ma = new animate.MoveTo(
         [0, {x: x, y: y}, 'linear'],
-        [350, {x: 15 + x, y: y - 25}, 'linear']
+        [600, {x: x, y: y - 35}, 'linear']
       );
       var self = this;
       ma.onFrameEnd = function(t, dt) {

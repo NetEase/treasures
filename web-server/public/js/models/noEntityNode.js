@@ -16,18 +16,21 @@ __resources__["/noEntityNode.js"] = {meta: {mimetype: "application/javascript"},
   NoEntityNode.createNameNode = function(data) {
     var name;
     var font = 'Arial Bold';
-    var fill = 'rgb(255,10,10)';
+    var fill = '#FF0000';
     switch(data.type) {
       case EntityType.PLAYER: 
-        name = data.name + ' - ' + data.treasureCount;
+        name = data.name + ' - ' + data.score;
+        fill = '#D41313';
         break;
       case EntityType.TREASURE:
-        name = data.kindName;
+        name = data.score;
+        fill = '#D41313';
         font = 'Arial';
         break;
       default:
         name = data.name;
-        font = 'Arial';
+        fill = '#ff0000';
+        font = 'Arial Bold';
     }
     var nameModel = new model.TextModel({
       text: name,

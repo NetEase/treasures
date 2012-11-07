@@ -47,10 +47,13 @@ exp.init = function(opts) {
 function addEvent(player) {
   player.on('pickItem', function(args) {
     var player = exp.getEntity(args.entityId);
+    var treasure = exp.getEntity(args.target);
     player.target = null;
-    player.treasureCount++;
-    exp.removeEntity(args.target);
-    channel.pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, treasureCount: player.treasureCount});
+    if (treasure) {
+      player.addScore(treasure.score);
+      exp.removeEntity(args.target);
+      channel.pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, score: treasure.score});
+    }
   });
 }
 
@@ -93,6 +96,21 @@ exp.addEntity = function(e) {
 
   added.push(e);
 	return true;
+};
+
+// player score rank
+var tickCount = 0;
+exp.rankUpdate = function () {
+  tickCount ++;
+  if (tickCount >= 10) {
+    tickCount = 0;
+    var player = exp.getAllPlayers();
+    player.sort(function(a, b) {
+      return a.score < b.score;
+    });
+    var ids = player.slice(0, 10).map(function(a){ return a.entityId; });
+    channel.pushMessage({route: 'rankUpdate', entities: ids});
+  }
 };
 
 /**
@@ -162,7 +180,7 @@ exp.generateTreasures = function (n) {
   }
   for (var i = 0; i < n; i++) {
     var d = dataApi.treasure.random();
-    var t = new Treasure({kindId: d.id, kindName: d.name, imgId: d.imgId});
+    var t = new Treasure({kindId: d.id, kindName: d.name, imgId: d.imgId, score: parseInt(d.heroLevel, 10)});
     exp.addEntity(t);
   }
 };

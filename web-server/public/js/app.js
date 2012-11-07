@@ -48,6 +48,8 @@ __resources__["/app.js"] = {
       cur.className = cur.className.replace('current', '').trim();
       var p = document.getElementById(id);
       p.className = p.className + ' current';
+      var rank = document.getElementById('rank');
+      rank.className = id == 'game' ? '' : 'hide';
     }
 
     /**

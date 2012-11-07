@@ -12,6 +12,7 @@ function tick() {
   //run all the action
   area.actionManager().update();
   area.entityUpdate();
+  area.rankUpdate();
 }
 
 /**
