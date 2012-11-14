@@ -18,8 +18,6 @@ var exp = module.exports;
  * @api public
  */
 exp.playerLeave = function(args, cb) {
-  console.log('-----23');
-  console.log(args);
 	var areaId = args.areaId;
 	var playerId = args.playerId;
 	var player = area.getPlayer(playerId);
@@ -29,7 +27,7 @@ exp.playerLeave = function(args, cb) {
 		return;
 	}
 	area.removePlayer(playerId);
-	area.channel().pushMessage({route: 'onUserLeave', code: consts.MESSAGE.RES, playerId: playerId});
+	area.getChannel().pushMessage({route: 'onUserLeave', code: consts.MESSAGE.RES, playerId: playerId});
 	utils.invokeCallback(cb);
 };
 

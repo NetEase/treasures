@@ -2,7 +2,7 @@
 var area = require('../../../models/area');
 var Player = require('../../../models/player')
 var Move = require('../../../models/action/move');
-var channelService = require('pomelo').channelService;
+// var channelService = require('pomelo').channelService;
 var logger = require('pomelo-logger').getLogger(__filename);
 var app = require('pomelo').app;
 var consts = require('../../../consts/consts');
@@ -25,7 +25,7 @@ handler.enterScene = function(msg, session, next) {
   var player = new Player({id: msg.playerId, name: msg.name, kindId: role.id});
 
   player.serverId = session.frontendId;
-  console.log(player);
+  // console.log(player);
 
   if (!area.addEntity(player)) {
     logger.error("Add player to area faild! areaId : " + player.areaId);
@@ -84,7 +84,7 @@ handler.getAnimation = function(msg, session, next) {
  */
 handler.move = function(msg, session, next) {
   var endPos = msg.targetPos;
-  var playerId = session.playerId;
+  var playerId = session.get('playerId');
   var player = area.getPlayer(playerId);
   if (!player) {
     logger.error('Move without a valid player ! playerId : %j', playerId);
@@ -116,7 +116,8 @@ handler.move = function(msg, session, next) {
       code: consts.MESSAGE.RES,
       sPos: player.getPos()
     });
-    area.channel().pushMessage({route: 'onMove', entityId: player.entityId, endPos: endPos});
+
+    area.getChannel().pushMessage({route: 'onMove', entityId: player.entityId, endPos: endPos});
   }
 };
 

@@ -1,7 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var dataApi = require('../util/dataApi');
 var pomelo = require('pomelo');
-var channelService = pomelo.channelService;
 var ActionManager = require('./action/actionManager');
 var timer = require('./timer');
 var EntityType = require('../consts/consts').EntityType;
@@ -34,8 +33,6 @@ exp.init = function(opts) {
   width = opts.width;
   height = opts.height;
 
-	channel = channelService.getChannel('area_' + id, true);
-
 	actionManager = new ActionManager();
   exp.generateTreasures(40);
 
@@ -43,6 +40,14 @@ exp.init = function(opts) {
   timer.run();
 };
 
+var getChannel = exp.getChannel= function() {
+  if(channel) {
+    return channel;
+  }
+
+  channel = pomelo.app.get('channelService').getChannel('area_' + id, true);
+  return channel;
+};
 
 function addEvent(player) {
   player.on('pickItem', function(args) {
@@ -52,7 +57,7 @@ function addEvent(player) {
     if (treasure) {
       player.addScore(treasure.score);
       exp.removeEntity(args.target);
-      channel.pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, score: treasure.score});
+      getChannel().pushMessage({route: 'onPickItem', entityId: args.entityId, target: args.target, score: treasure.score});
     }
   });
 }
@@ -63,11 +68,11 @@ var added = [];
 var reduced = [];
 exp.entityUpdate = function() {
   if (reduced.length > 0) {
-    channel.pushMessage({route: 'removeEntities', entities: reduced});
+    getChannel().pushMessage({route: 'removeEntities', entities: reduced});
     reduced = [];
   }
   if (added.length > 0) {
-    channel.pushMessage({route: 'addEntities', entities: added});
+    getChannel().pushMessage({route: 'addEntities', entities: added});
     added = [];
   }
 };
@@ -83,7 +88,7 @@ exp.addEntity = function(e) {
   entities[e.entityId] = e;
   
   if (e.type === EntityType.PLAYER) {
-		channel.add(e.id, e.serverId);
+		getChannel().add(e.id, e.serverId);
     addEvent(e);
 		
 		if (!!players[e.id]) {
@@ -109,7 +114,7 @@ exp.rankUpdate = function () {
       return a.score < b.score;
     });
     var ids = player.slice(0, 10).map(function(a){ return a.entityId; });
-    channel.pushMessage({route: 'rankUpdate', entities: ids});
+    getChannel().pushMessage({route: 'rankUpdate', entities: ids});
   }
 };
 
@@ -125,7 +130,7 @@ exp.removeEntity = function(entityId) {
   }
 
 	if (e.type === EntityType.PLAYER) {
-		channel.leave(e.id, e.serverId);
+		getChannel().leave(e.id, e.serverId);
 		actionManager.abortAllAction(entityId);
 			
     delete players[e.id];
@@ -222,9 +227,6 @@ exp.width = function() {
 
 exp.height = function() {
 	return height;
-};
-exp.channel = function () {
-	return channel;
 };
 
 exp.entities = function () {

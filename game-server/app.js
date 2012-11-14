@@ -20,7 +20,7 @@ app.configure(function() {
 });
 
 app.configure('production|development', 'area', function(){
-  var areaId = app.curserver.areaId;
+  var areaId = app.get('curServer').areaId;
   if (!areaId || areaId < 0) {
     throw new Error('load area config failed');
   }
