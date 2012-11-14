@@ -41,6 +41,7 @@ __resources__["/msgHandler.js"] = {
 
       // Handle move  message
       pomelo.on('onMove', function(data) {
+        console.log('onMove');
         var path = data.path;
         var entity = app.getCurArea().getEntity(data.entityId);
         if (!entity) {
