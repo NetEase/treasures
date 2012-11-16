@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "dependencies": {
-    "pomelo":"0.1.105"
+    "pomelo":"0.1.109"
     , "crc" : ">=0.0.1"
     , "pomelo-collection": ">=0.1.0"
     , "pomelo-logger": "0.0.2" 
