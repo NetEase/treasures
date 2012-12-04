@@ -22,7 +22,6 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
     this.kindId = opts.kindId;
     this.type = opts.type;
     this.name = opts.name;
-    this.flipx = opts.flipx;
   };
 
   /**
@@ -33,22 +32,22 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
    */
   Animation.prototype.create = function() {
     var animationData = this.getJsonData();
-    var width = animationData.width;
-    var height = animationData.height;
-    var totalFrames = animationData.totalFrames;
+    var width = parseInt(animationData.width);
+    var height = parseInt(animationData.height);
+    var totalFrames = parseInt(animationData.totalFrames);
 
     var img = this.getImage();
 
     var ani = new FrameAnimation({
-      flipX: this.flipx,
       image : img,
-      w : width,
-      h : height,
-      totalTime : totalFrames * 50,
-      interval : 50
+      w : width - 5,
+      h : height - 5,
+      totalTime : totalFrames * 80,
+      interval : 80,
+      HSpan: width,
+      VSpan: height
     });
     ani.name = this.name;
-    ani.flipx = this.flipx;
     return ani;
   }
 
@@ -78,7 +77,7 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
     var id = this.kindId, type = this.type, name = this.name;
     var aniIamgeUrl;
     if (type === EntityType.PLAYER) {
-      aniIamgeUrl = imgAndJsonUrl+'animation/character/'+id+'/'+name+'.png';
+      aniIamgeUrl = imgAndJsonUrl + 'animationPs3/' + id + '/' + name + '.gif';
     }
     var ResMgr = app.getResMgr();
     var img = ResMgr.loadImage(aniIamgeUrl);

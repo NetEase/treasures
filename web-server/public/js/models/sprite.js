@@ -2,25 +2,16 @@ __resources__["/sprite.js"] = {
   meta: {mimetype: "application/javascript"},
   
   data: function(exports, require, module, __filename, __dirname) {
-    var pomelo = window.pomelo;
-    var Node = require('node').Node;
     var animate = require('animate');
-    var SequenceAnimation = require('animate').SequenceAnimation;
     var model = require('model');
-    var FrameSeqComponent = require('component').FrameSeqComponent;
-    var FrameAnimation = require('frameanimation').FrameAnimation;
     var imgAndJsonUrl = require('config').IMAGE_URL;
-    var aniName = require('consts').AnimationName;
-    var aniOrientation = require('consts').Orientation;
-    var Border = require('consts').Border;
-    var EntityType = require('consts').EntityType;
-    var NodeCoordinate = require('consts').NodeCoordinate;
     var consts = require('consts');
+    var aniOrientation = consts.aniOrientation;
+    var EntityType = consts.EntityType;
+    var NodeCoordinate = consts.NodeCoordinate;
     var utils = require('utils');
-    var dataApi = require('dataApi');
     var noEntityNode = require('noEntityNode');
-    var animation = require('animation');
-
+    var Animation = require('animation');
     var app = require('app');
 
     /**
@@ -52,11 +43,10 @@ __resources__["/sprite.js"] = {
      * @api private
      */
     Sprite.prototype._init = function() {
-      var name = aniName.LEFT_STAND, startAin = 'Stand';
-      var npcName = aniOrientation.LEFT;
+      var startAin = 'Stand';
       var type = this.entity.type;
       if (type === EntityType.PLAYER) {
-        this._initDynamictNode(aniOrientation.LEFT+startAin);
+        this._initDynamictNode(aniOrientation.LEFT_DOWN + startAin);
       } else if (type === EntityType.TREASURE) {
         this._initStaticNode();
       }
@@ -73,10 +63,10 @@ __resources__["/sprite.js"] = {
       var staticImg = null;
       switch(this.entity.type) {
         case EntityType.ITEM:
-          staticImg = ResMgr.loadImage(imgAndJsonUrl + 'item/' + this.entity.imgId + '.png');
+          staticImg = ResMgr.loadImage(imgAndJsonUrl + 'item/item_' + this.entity.imgId + '.png');
         break;
         case EntityType.TREASURE:
-          staticImg = ResMgr.loadImage(imgAndJsonUrl + 'equipment/60/' + this.entity.imgId + '.png');
+          staticImg = ResMgr.loadImage(imgAndJsonUrl + 'equipment/item_' + this.entity.imgId + '.png');
         break;
       }
       var staticModel = new model.ImageModel({
@@ -157,9 +147,9 @@ __resources__["/sprite.js"] = {
     /**
      * Action makes up animation.
      * 
-     * @param {Object} dir, orientation of action
-     * @param {String} actionName, the name of action
-     * @param {Function} cb
+     * @param {Object} dir orientation of action
+     * @param {String} actionName the name of action
+     * @param {Function} callback
      * @api private
      */
     Sprite.prototype._action = function(dir, actionName, callback) {
@@ -170,23 +160,16 @@ __resources__["/sprite.js"] = {
         dir = {x1:0, y1: 0, x2:1, y2: 1};
       }
       var dr = utils.calculateDirection(dir.x1, dir.y1, dir.x2, dir.y2);
-      var orientation = dr.orientation;
-      var flipX = dr.flipX;
+      //var orientation = dr.orientation;
+      //var flipX = dr.flipX;
       if (!!this.curNode) {
-        var ori;
-        if (orientation && orientation === aniOrientation.LEFT) {
-          ori = 'LEFT_' + actionName;
-        } else if (orientation && orientation === aniOrientation.RIGHT) {
-          ori = 'RIGHT_' + actionName;
-        }
-        var name = aniName[ori];
+        var name = dr + actionName;
         var actionAnimation = null;
         if (this.entity.type === EntityType.PLAYER) {
-          actionAnimation = new animation({
+          actionAnimation = new Animation({
             kindId: this.entity.kindId,
             type: this.entity.type,
-            name: name,
-            flipx: flipX
+            name: name
           }).create();
         }
         var actionModel = actionAnimation.target();
@@ -196,14 +179,15 @@ __resources__["/sprite.js"] = {
         });
         this.curNode.setModel(actionModel);
         var self = this;
-        if (actionName === 'WALK' || actionName === 'STAND') {
+        console.log(actionName);
+        if (actionName === 'Walk' || actionName === 'Stand') {
           var loopAnimation = animate.times(actionAnimation, Infinity);
           this.curNode.exec('addAnimation', loopAnimation);
           return {
             actionAnimation: actionAnimation,
             loopAnimation: loopAnimation
           };
-        } 
+        }
         actionAnimation.onFrameEnd = function(t, dt) {
           if (self.curNode && actionAnimation.isDone()) {
             callback();
@@ -211,14 +195,14 @@ __resources__["/sprite.js"] = {
           }
         }
         this.curNode.exec('addAnimation', actionAnimation);
-        return actionAnimation;
+        return {actionAnimation: actionAnimation};
       }
     };
 
     //Walk animation, one of four basic animations.
     Sprite.prototype.walk = function(dir) {
       this.stopWholeAnimations();
-      var result = this._action(dir, 'WALK');
+      var result = this._action(dir, 'Walk');
       this.walkAnimation = result.actionAnimation;
       this.walkFrameLoop = result.loopAnimation;
     };
@@ -242,8 +226,8 @@ __resources__["/sprite.js"] = {
     };
 
     //Initialized animation
-    Sprite.prototype._initStand = function(dir) {  
-      var result = this._action(dir, 'STAND');
+    Sprite.prototype._initStand = function(dir) {
+      var result = this._action(dir, 'Stand');
       this.standAnimation = result.actionAnimation;
       this.standFrameLoop = result.loopAnimation;
     };

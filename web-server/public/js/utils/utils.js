@@ -1,6 +1,6 @@
 __resources__["/utils.js"] = {meta: {mimetype: "application/javascript"}, data: function(exports, require, module, __filename, __dirname) {
 
-  var aniOrientation = require('consts').Orientation;
+  var aniOrientation = require('consts').aniOrientation;
 
   module.exports.distance = function(sx, sy, ex, ey) {
     var dx = ex - sx;
@@ -34,29 +34,27 @@ __resources__["/utils.js"] = {meta: {mimetype: "application/javascript"}, data: 
    * else, x1, y1 are the curNode position, x2, y2 are the target position
    */
   module.exports.calculateDirection = function(x1, y1, x2, y2) {
-    var distX = x2 - x1;
-    var distY = y2 - y1;
+    var distX = x2 - x1
+      , distY = y2 - y1
+      , orientation;
+
     if (distX >= 0 && distY < 0) {//quadrant 1
-      return {
-        orientation:  aniOrientation.LEFT,
-        flipX: false
-      };
+
+      orientation = aniOrientation.RIGHT_UP;
+
     } else if (distX < 0 && distY < 0) {//quadrant 2
-      return {
-        orientation:  aniOrientation.LEFT,
-        flipX: true
-      };
+
+      orientation = aniOrientation.LEFT_UP;
+
     } else if (distX <0 && distY >= 0) {//quadrant 3
-      return {
-        orientation:  aniOrientation.RIGHT,
-        flipX: false
-      };
+
+      orientation = aniOrientation.LEFT_DOWN;
+
     } else {//quadrant 4
-      return {
-        orientation:  aniOrientation.RIGHT,
-        flipX: true
-      };
+
+      orientation = aniOrientation.RIGHT_DOWN;
     }
+    return orientation;
   };
 }
 };

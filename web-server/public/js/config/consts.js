@@ -4,36 +4,11 @@ __resources__["/consts.js"] = {
 
     module.exports = {
 
-      AnimationName: {
-        LEFT_DIE: 'LeftDie',
-        RIGHT_DIE: 'RightDie',
-
-        LEFT_STAND: 'LeftStand',
-        RIGHT_STAND: 'RightStand' ,
-
-        LEFT_WALK: 'LeftWalk',
-        RIGHT_WALK: 'RightWalk',
-
-        LEFT_ATTACK: 'LeftAttack',
-        RIGHT_ATTACK: 'RightAttack',
-
-        LEFT_MAGIC: 'LeftMagic',
-        RIGHT_MAGIC: 'RightMagic',
-
-        LEFT_HIT: 'LeftHit',
-        RIGHT_HIT: 'RightHit',
-
-        LEFT_DEFEND: 'LeftDefend',
-        RIGHT_DEFEND: 'RightDefend'
-      },
-
-      Orientation: {
-        LEFT: 'Left',
-        RIGHT: 'Right',
-        LEFT_DOWN: 'Left_down',
-        LEFT_UP: 'Left_up',
-        RIGHT_DOWN: 'Right_down',
-        RIGHT_UP: 'Right_up'
+      aniOrientation:{
+        LEFT_DOWN: 'LeftDown',
+        LEFT_UP: 'LeftUp',
+        RIGHT_DOWN: 'RightDown',
+        RIGHT_UP: 'RightUp'
       },
 
       Border: {
@@ -52,19 +27,9 @@ __resources__["/consts.js"] = {
         TREASURE: 'treasure'
       },
 
-      AttackResult: {
-        SUCCESS: 1,
-        KILLED : 2,
-        MISS: 3,
-        NOT_IN_RANGE: 4,
-        NO_ENOUGH_MP: 5,
-        NOT_COOLDOWN: 6,
-        ATTACKER_CONFUSED: 7
-      },
-
       NodeCoordinate: {
         MAP_NODE: 0,
-        PLAYER_NODE: 1,
+        PLAYER_NODE: 0.5,
         MOB_NODE: 1,
         NPC_NODE: 1,
         ITEM_NODE: 1,

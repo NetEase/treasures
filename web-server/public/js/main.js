@@ -30,7 +30,7 @@ __resources__["/main.js"] = {
           pomelo.init({host: data.host, port: data.port, log: true}, function() {
             if (callback) {
               callback();
-            };
+            }
           });
         });
       });
@@ -65,6 +65,7 @@ __resources__["/main.js"] = {
       pomelo.request('area.playerHandler.getAnimation', function(result) {
         dataApi.animation.set(result.data);
         jsonLoad = true;
+        console.log(dataApi.animation);
         if (callback) {
           callback();
         }
