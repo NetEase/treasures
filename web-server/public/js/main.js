@@ -26,7 +26,7 @@ __resources__["/main.js"] = {
           if (data.host === '127.0.0.1') {
             data.host = location.hostname;
           }
-          console.log(data);
+          // console.log(data);
           pomelo.init({host: data.host, port: data.port, log: true}, function() {
             if (callback) {
               callback();
@@ -44,7 +44,6 @@ __resources__["/main.js"] = {
           loadAnimation(function() {
             pomelo.request('connector.entryHandler.entry', {name: name}, function(data) {
               pomelo.request("area.playerHandler.enterScene", {name: name, playerId: data.playerId}, function(data){
-                console.log(data);
                 msgHandler.init();
                 app.init(data.data);
               });
@@ -65,7 +64,6 @@ __resources__["/main.js"] = {
       pomelo.request('area.playerHandler.getAnimation', function(result) {
         dataApi.animation.set(result.data);
         jsonLoad = true;
-        console.log(dataApi.animation);
         if (callback) {
           callback();
         }
