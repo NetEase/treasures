@@ -34,7 +34,7 @@ __resources__["/animation.js"] = {meta: {mimetype: "application/javascript"}, da
     var animationData = this.getJsonData();
     var width = parseInt(animationData.width);
     var height = parseInt(animationData.height);
-    var totalFrames = parseInt(animationData.totalFrames);
+    var totalFrames = parseInt(animationData.totalFrame);
 
     var img = this.getImage();
 

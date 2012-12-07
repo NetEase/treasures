@@ -81,9 +81,9 @@ __resources__["/sprite.js"] = {
       });
       staticNode.id = this.entity.entityId;
       this.entity.scene.addNode(staticNode, this.mapNode);
-      staticNode.exec('translate', x, y, NodeCoordinate.NPC_NODE);
+      staticNode.exec('translate', x, y, NodeCoordinate.ITEM_NODE);
       var nameNode = noEntityNode.createNameNode(this.entity);
-      nameNode.exec('translate', -30, -70, NodeCoordinate.NPC_NODE);
+      nameNode.exec('translate', -30, -70, NodeCoordinate.NAME_NODE);
       this.entity.scene.addNode(nameNode, staticNode);
       this.curNode = staticNode;
     };
@@ -160,8 +160,6 @@ __resources__["/sprite.js"] = {
         dir = {x1:0, y1: 0, x2:1, y2: 1};
       }
       var dr = utils.calculateDirection(dir.x1, dir.y1, dir.x2, dir.y2);
-      //var orientation = dr.orientation;
-      //var flipX = dr.flipX;
       if (!!this.curNode) {
         var name = dr + actionName;
         var actionAnimation = null;
@@ -179,7 +177,6 @@ __resources__["/sprite.js"] = {
         });
         this.curNode.setModel(actionModel);
         var self = this;
-        console.log(actionName);
         if (actionName === 'Walk' || actionName === 'Stand') {
           var loopAnimation = animate.times(actionAnimation, Infinity);
           this.curNode.exec('addAnimation', loopAnimation);

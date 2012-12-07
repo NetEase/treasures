@@ -20,8 +20,6 @@ __resources__["/consts.js"] = {
 
       EntityType: {
         PLAYER: 'player',
-        NPC: 'npc',
-        MOB: 'mob',
         EQUIPMENT: 'equipment',
         ITEM: 'item',
         TREASURE: 'treasure'
@@ -29,9 +27,7 @@ __resources__["/consts.js"] = {
 
       NodeCoordinate: {
         MAP_NODE: 0,
-        PLAYER_NODE: 0.5,
-        MOB_NODE: 1,
-        NPC_NODE: 1,
+        PLAYER_NODE: 1,
         ITEM_NODE: 1,
         RED_BLOOD_NODE: 1.5,
         BLACK_BLOOD_NODE: 1.2,

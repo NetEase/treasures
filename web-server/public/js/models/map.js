@@ -28,7 +28,7 @@ __resources__["/map.js"] = {
    
     pro.loadMap = function() {
       var pos = this.initPos;
-      var mapUrl = '/image/map.png'
+      var mapUrl = url + 'map/' + 'oasis-mini.jpg'
 
       var mapImage = helper.loadImage(mapUrl);
 
