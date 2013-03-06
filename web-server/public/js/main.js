@@ -61,7 +61,7 @@ __resources__["/main.js"] = {
         }
         return;
       }
-      pomelo.request('area.playerHandler.getAnimation', {}, function(result) {
+      pomelo.request('area.playerHandler.getAnimation', function(result) {
         dataApi.animation.set(result.data);
         jsonLoad = true;
         if (callback) {
