@@ -23,7 +23,7 @@ __resources__["/clientManager.js"] = {
       var entity = app.getCurArea().getEntity(targetId);
      
       if (entity.type === EntityType.TREASURE) {
-        pomelo.notify('area.playerHandler.move', {targetPos: {x: entity.x, y: entity.y}, target: targetId});
+        pomelo.request('area.playerHandler.move', {targetPos: {x: entity.x, y: entity.y}, target: targetId});
       }
     }
 

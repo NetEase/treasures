@@ -8,6 +8,21 @@ var dataApi = require('./app/util/dataApi');
 var app = pomelo.createApp();
 app.set('name', 'treasures');
 
+app.configure('production|development', 'gate', function(){
+  app.set('connectorConfig', {
+      connector : pomelo.connectors.hybridconnector,
+  });
+});
+
+app.configure('production|development', 'connector', function(){
+  app.set('connectorConfig', {
+      connector : pomelo.connectors.hybridconnector,
+      heartbeat : 3,
+      useDict : true,
+      useProtobuf : true
+  });
+});
+
 app.configure('production|development', 'area', function(){
   var areaId = app.get('curServer').areaId;
   if (!areaId || areaId < 0) {
