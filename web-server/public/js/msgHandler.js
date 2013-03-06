@@ -70,7 +70,6 @@ __resources__["/msgHandler.js"] = {
       });
 
       pomelo.on('rankUpdate', function(data) {
-        //console.log(data);
         var ul = document.querySelector('#rank ul');
         var area = app.getCurArea();
         var li = "";

@@ -1,0 +1,10 @@
+{
+  "onPickItem" : {
+    "required uInt32 entityId" : 1,
+    "required uInt32 target" : 2,
+    "required uInt32 score" : 3
+  },
+  "rankUpdate" : {
+    "repeated uInt32 entities" : 1
+  }
+}
