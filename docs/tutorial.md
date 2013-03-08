@@ -44,14 +44,14 @@ Treasures 分为 web-Server 和 game-Server 两部分。
 {
   "development": {
     "connector": [
-      {"id": "connector-server-1", "host": "127.0.0.1", "port": 3150, "wsPort": 3010},
-      {"id": "connector-server-2", "host": "127.0.0.1", "port": 3151, "wsPort": 3011}
+      {"id": "connector-server-1", "host": "127.0.0.1", "port": 3150, "clientPort": 3010, "frontend": true},
+      {"id": "connector-server-2", "host": "127.0.0.1", "port": 3151, "clientPort": 3011, "frontend": true}
     ],
     "area": [
       {"id": "area-server-1", "host": "127.0.0.1", "port": 3250, "areaId": 1}
     ],
     "gate": [
-      {"id": "gate-server-1", "host": "127.0.0.1", "wsPort": 3014}
+      {"id": "gate-server-1", "host": "127.0.0.1", "clientPort": 3014, "frontend": true}
     ]
   }
 }
@@ -225,3 +225,8 @@ exports.playerLeave = function(args, cb) {
 };
 ```
 这样就轻易的完成了一个跨进程的调用
+
+##数据压缩
+pomelo 0.3 版本开始增加了传输数据的压缩特性，数据采用 protobuf 方式压缩，二进制格式传输，大幅降低了网络传输流量。
+
+数据压缩参考 [Pomelo 数据压缩协议](https://github.com/NetEase/pomelo/wiki/Pomelo-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%8D%8F%E8%AE%AE)
