@@ -2,20 +2,20 @@
   "appenders": [
     {
       "type": "file",
-      "filename": "./logs/node-log-[serverId].log",
+      "filename": "./logs/node-log-${opts:serverId}.log",
       "fileSize": 1048576,
       "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5
+        "type": "basic"
+      }, 
+      "backups": 5
     },
     {
       "type": "console"
     },
     {
       "type": "file",
-      "filename": "./logs/con-log-[serverId].log",
-      "serverType": "connector",
+      "filename": "./logs/con-log-${opts:serverId}.log", 
+      "pattern": "connector", 
       "fileSize": 1048576,
       "layout": {
           "type": "basic"
@@ -25,7 +25,7 @@
     },
     {
       "type": "file",
-      "filename": "./logs/rpc-log-[serverId].log",
+      "filename": "./logs/rpc-log-${opts:serverId}.log",
       "fileSize": 1048576,
       "layout": {
           "type": "basic"
@@ -35,33 +35,13 @@
     },
     {
       "type": "file",
-      "filename": "./logs/forward-log-[serverId].log",
+      "filename": "./logs/forward-log-${opts:serverId}.log",
       "fileSize": 1048576,
       "layout": {
           "type": "basic"
         }
       ,"backups": 5,
       "category":"forward-log"
-    },
-    {
-      "type": "file",
-      "filename": "./logs/systemInfo.log",
-      "fileSize": 1048576,
-      "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"systemInfo-log"
-    },
-    {
-      "type": "file",
-      "filename": "./logs/processInfo.log",
-      "fileSize": 1048576,
-      "layout": {
-          "type": "basic"
-        }
-      ,"backups": 5,
-      "category":"processInfo-log"
     },
     {
       "type": "file",
@@ -76,7 +56,9 @@
   ],
 
   "levels": {
-  	"rpc-log" : "ERROR", 
+    "rpc-log" : "ERROR", 
     "forward-log": "ERROR"
-  }
+  }, 
+
+  "replaceConsole": true
 }
