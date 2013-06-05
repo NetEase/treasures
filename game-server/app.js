@@ -11,13 +11,14 @@ app.set('name', 'treasures');
 app.configure('production|development', 'gate', function(){
   app.set('connectorConfig', {
       connector : pomelo.connectors.hybridconnector,
+      heartbeat : 300
   });
 });
 
 app.configure('production|development', 'connector', function(){
   app.set('connectorConfig', {
       connector : pomelo.connectors.hybridconnector,
-      heartbeat : 3,
+      heartbeat : 300,
       useDict : true,
       useProtobuf : true
   });
