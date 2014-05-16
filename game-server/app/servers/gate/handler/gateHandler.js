@@ -1,30 +1,49 @@
 var Code = require('../../../../../shared/code');
-var dispatcher = require('../../../util/dispatcher');
-
+var bearcat = require('bearcat');
 /**
  * Gate handler that dispatch user to connectors.
  */
-module.exports = function(app) {
-	return new Handler(app);
-};
-
-var Handler = function(app) {
+var GateHandler = function(app) {
 	this.app = app;
+	this.dispatcher = null;
 };
 
-Handler.prototype.queryEntry = function(msg, session, next) {
+GateHandler.prototype.queryEntry = function(msg, session, next) {
 	var uid = msg.uid;
 	if (!uid) {
-		next(null, {code: Code.FAIL});
+		next(null, {
+			code: Code.FAIL
+		});
 		return;
 	}
 
 	var connectors = this.app.getServersByType('connector');
 	if (!connectors || connectors.length === 0) {
-		next(null, {code: Code.GATE.NO_SERVER_AVAILABLE});
+		next(null, {
+			code: Code.GATE.NO_SERVER_AVAILABLE
+		});
 		return;
 	}
 
-	var res = dispatcher.dispatch(uid, connectors);
-	next(null, {code: Code.OK, host: res.host, port: res.clientPort});
+	var res = this.dispatcher.dispatch(uid, connectors);
+	next(null, {
+		code: Code.OK,
+		host: res.host,
+		port: res.clientPort
+	});
+};
+
+module.exports = function(app) {
+	return bearcat.getBean({
+		id: "gateHandler",
+		func: GateHandler,
+		args: [{
+			name: "app",
+			value: app
+		}],
+		props: [{
+			name: "dispatcher",
+			ref: "dispatcher"
+		}]
+	});
 };
