@@ -18,7 +18,6 @@ var AreaService = function() {
   this.consts = null;
 }
 
-
 /**
  * Init areas
  * @param {Object} opts

@@ -4,8 +4,8 @@ var fs = require('fs');
 
 var PlayerHandler = function(app) {
   this.app = app;
-  this.areaService = null;
   this.consts = null;
+  this.areaService = null;
 };
 
 /**
