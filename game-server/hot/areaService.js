@@ -40,6 +40,7 @@ AreaService.prototype.run = function() {
 
 AreaService.prototype.tick = function() {
   //run all the action
+  logger.info('tick');
   this.actionManagerService.update();
   this.entityUpdate();
   this.rankUpdate();
@@ -70,6 +71,7 @@ AreaService.prototype.addEvent = function(player) {
   var self = this;
   player.on('pickItem', function(args) {
     console.log(args);
+    logger.info(args);
     var player = self.getEntity(args.entityId);
     var treasure = self.getEntity(args.target);
     player.target = null;
