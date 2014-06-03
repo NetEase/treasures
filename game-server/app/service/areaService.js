@@ -69,7 +69,6 @@ AreaService.prototype.getChannel = function() {
 AreaService.prototype.addEvent = function(player) {
   var self = this;
   player.on('pickItem', function(args) {
-    console.log(args);
     var player = self.getEntity(args.entityId);
     var treasure = self.getEntity(args.target);
     player.target = null;
