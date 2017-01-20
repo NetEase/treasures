@@ -1,3 +1,14 @@
+#Treasures
+a tutorial demo of [pomelo](https://github.com/NetEase/pomelo)
+
+Treasures is a simple game in order to show how to use pomelo
+
+If you are using pomelo 0.2.x , you can check this branch [pomelo-0.2.5](https://github.com/NetEase/treasures/tree/pomelo-0.2.5)
+
+[Demo 详细说明](https://github.com/NetEase/pomelo/wiki/Tutorial-2----Treasures)
+
+[Demo Guide](https://github.com/NetEase/pomelo/wiki/Treasure)
+
 ## 概述
 这是一篇通过一个简单的 treasure 捡宝的例子讲述如何使用 [Bearcat](https://github.com/bearcatnode/bearcat) 来快速, 高效的进行 [pomelo](https://github.com/NetEase/pomelo) game 开发  
 
