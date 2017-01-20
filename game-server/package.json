@@ -3,10 +3,10 @@
   "version": "0.2.0",
   "private": false,
   "dependencies": {
-    "pomelo": "1.x",
+    "bearcat": "^0.4.29",
     "crc": ">=0.0.1",
+    "pomelo": "^2.2.3",
     "pomelo-collection": ">=0.1.0",
-    "pomelo-logger": "0.1.x",
-    "bearcat": "0.2.x"
+    "pomelo-logger": "0.1.x"
   }
 }

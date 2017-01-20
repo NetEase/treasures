@@ -1,6 +1,8 @@
 __resources__["/app.js"] = {
-  meta: {mimetype: "application/javascript"},
-  
+  meta: {
+    mimetype: "application/javascript"
+  },
+
   data: function(exports, require, module, __filename, __dirname) {
     var gameMsgHandler = require('msgHandler'); // server message handler
     var Area = require('area');
@@ -91,8 +93,8 @@ __resources__["/app.js"] = {
       return getArea().getCurPlayer();
     }
 
-    function getResMgr(){
-      if(!resMgr){
+    function getResMgr() {
+      if (!resMgr) {
         resMgr = new ResMgr();
       }
 
@@ -104,7 +106,7 @@ __resources__["/app.js"] = {
      * @param data {Object} The init data for area
      * @api private
      */
-    function configData(data){
+    function configData(data) {
       data.skch = skch;
       data.gd = gd;
       data.gv = gv;
@@ -131,4 +133,3 @@ __resources__["/app.js"] = {
     exports.changeView = changeView;
   }
 };
-

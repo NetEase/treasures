@@ -1,5 +1,7 @@
 __resources__["/area.js"] = {
-  meta: {mimetype: "application/javascript"}, 
+  meta: {
+    mimetype: "application/javascript"
+  },
   data: function(exports, require, module, __filename, __dirname) {
     var Player = require('player');
     var Treasure = require('treasure');
@@ -19,9 +21,9 @@ __resources__["/area.js"] = {
         window.mozRequestAnimationFrame ||
         window.oRequestAnimationFrame ||
         window.msRequestAnimationFrame ||
-        function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
-        window.setTimeout(callback, 1000/30);
-      };
+        function( /* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
+          window.setTimeout(callback, 1000 / 30);
+        };
     })();
 
     function Area(opts) {
@@ -30,7 +32,9 @@ __resources__["/area.js"] = {
       this.entities = {};
       this.players = {};
       this.map = null;
-      this.componentAdder = new ComponentAdder({area: this});
+      this.componentAdder = new ComponentAdder({
+        area: this
+      });
 
       //this.scene;
       this.skch = opts.skch;
@@ -46,11 +50,19 @@ __resources__["/area.js"] = {
      * Init area, it will init colorbox, entities
      * @param opts {Object} The data for init area, contains entities in the player view, data for map and data for current player.
      */
-    Area.prototype.init = function(opts){
+    Area.prototype.init = function(opts) {
       this.initColorBox();
 
       // width , height should be invoked by map data
-      this.map = new Map({scene: this.scene, pos: {x: 0, y: 0}, width: opts.width, height: opts.height});
+      this.map = new Map({
+        scene: this.scene,
+        pos: {
+          x: 0,
+          y: 0
+        },
+        width: opts.width,
+        height: opts.height
+      });
       for (var key in opts.entities) {
         this.addEntity(opts.entities[key]);
       }
@@ -61,11 +73,11 @@ __resources__["/area.js"] = {
 
       var width = parseInt(getComputedStyle(document.getElementById("game")).width);
       var height = parseInt(getComputedStyle(document.getElementById("game")).height);
-      
+
       this.componentAdder.addComponent();
     };
 
-    Area.prototype.run = function(){
+    Area.prototype.run = function() {
       var time = Date.now();
 
       var tickCount = 0;
@@ -86,10 +98,10 @@ __resources__["/area.js"] = {
 
       var tick = function() {
         var next = Date.now();
-        closure.gd.step(next,  next - time);
+        closure.gd.step(next, next - time);
 
-        tickCount ++;
-        allCount ++;
+        tickCount++;
+        allCount++;
 
         var passedTime = next - time2;
         if (passedTime >= 2000) {
@@ -110,10 +122,10 @@ __resources__["/area.js"] = {
 
     /**
      * Get entity from area
-     * @param id {Number} The entity id 
+     * @param id {Number} The entity id
      * @api public
      */
-    Area.prototype.getEntity = function(id){
+    Area.prototype.getEntity = function(id) {
       return this.entities[id];
     };
 
@@ -122,8 +134,8 @@ __resources__["/area.js"] = {
      * @param entity {Object} The entity add to the area.
      * @api public
      */
-    Area.prototype.addEntity = function(entity){
-      if(!entity || !entity.entityId) {
+    Area.prototype.addEntity = function(entity) {
+      if (!entity || !entity.entityId) {
         return false;
       }
       entity.scene = this.scene;
@@ -131,13 +143,13 @@ __resources__["/area.js"] = {
 
       var e;
       switch (entity.type) {
-        case 'player': 
+        case 'player':
           e = new Player(entity);
           this.players[e.id] = e.entityId;
-        break;
+          break;
         case 'treasure':
           e = new Treasure(entity);
-        break;
+          break;
         default:
           return false;
       }
@@ -152,8 +164,8 @@ __resources__["/area.js"] = {
      * @param id {Number} The entity id or the entity to remove.
      * @api public
      */
-    Area.prototype.removeEntity = function(id){
-      if(!this.entities[id]) {
+    Area.prototype.removeEntity = function(id) {
+      if (!this.entities[id]) {
         return true;
       }
 
@@ -174,7 +186,7 @@ __resources__["/area.js"] = {
     /**
      * Get player for given player id
      * @param playerId {String} Player id
-     * @return {Object} Return the player or null if the player doesn't exist. 
+     * @return {Object} Return the player or null if the player doesn't exist.
      * @api public
      */
     Area.prototype.getPlayer = function(playerId) {
@@ -220,4 +232,3 @@ __resources__["/area.js"] = {
     module.exports = Area;
   }
 };
-
