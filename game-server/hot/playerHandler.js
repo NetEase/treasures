@@ -56,7 +56,7 @@ PlayerHandler.prototype.enterScene = function(msg, session, next) {
  */
 var animationData = null;
 PlayerHandler.prototype.getAnimation = function(msg, session, next) {
-  var path = '../../../../config/animation_json/';
+  var path = '../config/animation_json/';
   if (!animationData) {
     var dir = './config/animation_json';
     var name, reg = /\.json$/;
@@ -84,6 +84,7 @@ PlayerHandler.prototype.getAnimation = function(msg, session, next) {
  * @api public
  */
 PlayerHandler.prototype.move = function(msg, session, next) {
+  logger.info("%j %j", msg, "hello world");
   var endPos = msg.targetPos;
   var playerId = session.get('playerId');
   var player = this.areaService.getPlayer(playerId);
@@ -118,31 +119,18 @@ PlayerHandler.prototype.move = function(msg, session, next) {
       sPos: player.getPos()
     });
 
+
     this.areaService.getChannel().pushMessage({
       route: 'onMove',
       entityId: player.entityId,
       endPos: endPos
     });
   }
+
+  return;
 };
 
-module.exports = function(app) {
-  return bearcat.getBean({
-    id: "playerHandler",
-    func: PlayerHandler,
-    args: [{
-      name: "app",
-      value: app
-    }],
-    props: [{
-      name: "areaService",
-      ref: "areaService"
-    }, {
-      name: "dataApiUtil",
-      ref: "dataApiUtil"
-    }, {
-      name: "consts",
-      ref: "consts"
-    }]
-  });
+module.exports = {
+  id: "playerHandler",
+  func: PlayerHandler
 };

@@ -8,14 +8,16 @@ var treasure = require('../../config/data/treasure');
  *
  * @param {Array}
  */
-var Data = function(data) {
+var DataApi = function(data) {
   var fields = {};
   data[1].forEach(function(i, k) {
     fields[i] = k;
   });
   data.splice(0, 2);
 
-  var result = {}, ids = [], item;
+  var result = {},
+    ids = [],
+    item;
   data.forEach(function(k) {
     item = mapData(fields, k);
     result[item.id] = item;
@@ -50,7 +52,7 @@ var mapData = function(fields, item) {
  * @return {Array} result
  * @api public
  */
-Data.prototype.findBy = function(attr, value) {
+DataApi.prototype.findBy = function(attr, value) {
   var result = [];
   //console.log(' findBy ' + attr + '  value:' + value + '  index: ' + index);
   var i, item;
@@ -70,13 +72,13 @@ Data.prototype.findBy = function(attr, value) {
  * @return {Obj}
  * @api public
  */
-Data.prototype.findById = function(id) {
+DataApi.prototype.findById = function(id) {
   return this.data[id];
 };
 
-Data.prototype.random = function() {
+DataApi.prototype.random = function() {
   var length = this.ids.length;
-  var rid =  this.ids[Math.floor(Math.random() * length)];
+  var rid = this.ids[Math.floor(Math.random() * length)];
   return this.data[rid];
 };
 
@@ -86,13 +88,49 @@ Data.prototype.random = function() {
  * @return {array}
  * @api public
  */
-Data.prototype.all = function() {
+DataApi.prototype.all = function() {
   return this.data;
 };
 
-module.exports = {
-  area: new Data(area),
-  role: new Data(role),
-  treasure: new Data(treasure)
-};
+var DataApiUtil = function() {
+  this.areaData = null;
+  this.roleData = null;
+  this.treasureData = null;
+}
 
+DataApiUtil.prototype.area = function() {
+  if (this.areaData) {
+    return this.areaData;
+  }
+
+  this.areaData = new DataApi(area);
+  return this.areaData;
+}
+
+DataApiUtil.prototype.role = function() {
+  if (this.roleData) {
+    return this.roleData;
+  }
+
+  this.roleData = new DataApi(role);
+  return this.roleData;
+}
+
+DataApiUtil.prototype.treasure = function() {
+  if (this.treasureData) {
+    return this.treasureData;
+  }
+
+  this.treasureData = new DataApi(treasure);
+  return this.treasureData;
+}
+
+module.exports = {
+  id: "dataApiUtil",
+  func: DataApiUtil
+}
+// module.exports = {
+//   area: new DataApi(area),
+//   role: new DataApi(role),
+//   treasure: new DataApi(treasure)
+// };

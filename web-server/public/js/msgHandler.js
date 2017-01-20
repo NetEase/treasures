@@ -1,11 +1,13 @@
 __resources__["/msgHandler.js"] = {
-  meta: {mimetype: "application/javascript"},
+  meta: {
+    mimetype: "application/javascript"
+  },
   data: function(exports, require, module, __filename, __dirname) {
 
     var pomelo = window.pomelo;
     var app = require('app');
     var EntityType = require('consts').EntityType;
-    
+
     exports.init = init;
 
     function init() {
@@ -76,7 +78,7 @@ __resources__["/msgHandler.js"] = {
         data.entities.forEach(function(id) {
           var e = area.getEntity(id);
           if (e) {
-            li += '<li><span>' + e.name + '</span><span>' + e.score + '</span></li>';  
+            li += '<li><span>' + e.name + '</span><span>' + e.score + '</span></li>';
           }
         });
         ul.innerHTML = li;
@@ -104,4 +106,3 @@ __resources__["/msgHandler.js"] = {
     };
   }
 };
-

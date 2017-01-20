@@ -1,24 +1,26 @@
-var Action = require('./action');
+var logger = require('pomelo-logger').getLogger('bearcat-treasures', 'Move');
+var bearcat = require('bearcat');
 var util = require('util');
-var area = require('../area');
-//var logger = require('pomelo-logger').getLogger(__filename);
 
 // Move action, which is used to preserve and update user position
 var Move = function(opts) {
-	opts.type = 'move';
-	opts.id = opts.entity.entityId;
-	opts.singleton = true;
+  this.opts = opts;
+  opts.type = 'move';
+  opts.id = opts.entity.entityId;
+  opts.singleton = true;
 
-	Action.call(this, opts);
-	this.time = Date.now();
-	this.entity = opts.entity;
+  this.time = Date.now();
+  this.entity = opts.entity;
   this.endPos = opts.endPos;
 };
 
-util.inherits(Move, Action);
+Move.prototype.init = function() {
+  var Action = bearcat.getFunction('action');
+  Action.call(this, this.opts);
+}
 
 Move.prototype.update = function() {
-	var time = Date.now() - this.time;
+  var time = Date.now() - this.time;
   var speed = this.entity.walkSpeed;
   var moveLength = speed * time / 1000;
   var dis = getDis(this.entity.getPos(), this.endPos);
@@ -27,7 +29,10 @@ Move.prototype.update = function() {
     this.entity.setPos(this.endPos.x, this.endPos.y);
     return;
   } else if (dis < 55 && this.entity.target) {
-    this.entity.emit('pickItem', {entityId: this.entity.entityId, target: this.entity.target});
+    this.entity.emit('pickItem', {
+      entityId: this.entity.entityId,
+      target: this.entity.target
+    });
   }
   var curPos = getPos(this.entity.getPos(), this.endPos, moveLength, dis);
   this.entity.setPos(curPos.x, curPos.y);
@@ -51,4 +56,14 @@ function getPos(start, end, moveLength, dis) {
   return pos;
 }
 
-module.exports = Move;
+module.exports = {
+  id: "move",
+  func: Move,
+  args: [{
+    name: "opts",
+    type: "Object"
+  }],
+  scope: "prototype",
+  parent: "action",
+  init: "init"
+};
