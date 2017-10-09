@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": false,
   "dependencies": {
-    "express": "2.5.2"
+    "express": "2.5.2",
+    "mime": "^1"
   }
 }
